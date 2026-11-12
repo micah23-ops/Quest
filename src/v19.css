@@ -1,0 +1,13 @@
+/* v19: By area */
+.short-chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.view-seg{display:inline-flex;margin-left:auto;border:1.5px solid var(--line);border-radius:99px;overflow:hidden;background:#fff}
+.view-seg button{border:0;background:transparent;font:inherit;font-weight:700;font-size:13px;padding:7px 13px;cursor:pointer;color:var(--forest)}
+.view-seg button.on{background:var(--forest);color:var(--cream,#F7F3E9)}
+.area-group{margin:14px 0 4px}
+.area-head{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;letter-spacing:.02em;color:var(--forest);padding:2px 4px 6px;border-bottom:1.5px dashed var(--line);margin-bottom:6px}
+.area-head .area-n{font-weight:700;font-size:11px;background:#e9eee4;color:var(--forest);border-radius:99px;padding:1px 8px}
+.area-group.unset .area-head{color:#7b8479}
+.area-group .sl-tags .tag.area{display:none}
+.evd-row:has(.dir-btn)>a:first-of-type{margin-left:auto}.evd-row .dir-btn{margin-left:0;background:var(--forest);color:#fff;border-color:var(--forest)}
+.evd-row:has(.dir-btn){gap:6px}
+.dir-row>span:empty{display:none}

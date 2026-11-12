@@ -1,0 +1,6 @@
+/* v29 */
+.q29-cats{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px 2px}
+.q29-cat{border:1px solid #c8d2c4;background:#fffefa;border-radius:999px;padding:4px 11px;font-size:11.5px;font-weight:700;color:#6b7d70;cursor:pointer}
+.q29-cat.on{background:#2F4F46;border-color:#2F4F46;color:#F7F3E9}
+.sl-tags .tag:not(.area):not(.q27-n){cursor:pointer}
+.q29-stay{white-space:nowrap}

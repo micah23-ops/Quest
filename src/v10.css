@@ -1,0 +1,10 @@
+/* phones: slimmer tab bar, no dark line */
+.bottom-nav button.on::before{display:none!important}
+@media(max-width:800px){
+.bottom-nav{padding:3px 6px max(5px,env(safe-area-inset-bottom))!important}
+.bottom-nav button{padding:3px 2px!important;gap:1px!important;font-size:9.5px!important}
+.bottom-nav .nav-icon{padding:2px 14px!important}
+.bottom-nav button.on .nav-icon{padding:3px 15px!important}
+.nav-icon svg{width:19px;height:19px}
+.shell{padding-bottom:70px!important}
+}

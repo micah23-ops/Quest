@@ -1,0 +1,15 @@
+.o3-acts{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+.mv{font:inherit;font-size:11px;font-weight:700;color:#5f6e64;background:transparent;border:1px solid #dfe5db;border-radius:999px;padding:4px 10px;cursor:pointer}
+.mv:hover{background:#f3f6f1;border-color:#c5d1c3}
+.mv.armed{background:#fff6dc;border-color:#e9cf7a;color:#7a5d10}
+.star{border:0;background:transparent;font-size:22px;line-height:1;color:#b8c2b8;cursor:pointer;padding:2px 4px;align-self:center}
+.star.on{color:#e8b017}
+.sl-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;background:#eef2ec;color:#5f6e64}
+.tag.area{background:#e8f0f7;color:#4a6a86}
+.archive{margin-top:26px;padding-top:12px;border-top:1px dashed #dfe5db}
+.arch-toggle{border:0;background:transparent;font:inherit;font-size:13px;font-weight:700;color:#6f7d73;cursor:pointer;padding:6px 0}
+.arch-list{display:grid;gap:8px;margin-top:8px}
+.arch-row{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:#fff;border:1px solid #edf0e9;border-radius:12px;padding:10px 12px}
+.arch-main{min-width:0;flex:1 1 200px}.arch-name{font-weight:700;overflow-wrap:anywhere}.arch-sub{font-size:11px;color:#88958a;margin-top:2px}
+.arch-acts{display:flex;gap:6px}

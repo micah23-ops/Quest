@@ -1,0 +1,16 @@
+/* v42: slimmer itinerary top: no free-time row, small Mine/Group on the right */
+.q31-opts{display:none!important}
+.q31-bar2{margin:4px 0 6px}
+.q31-bar2 .q31-seg{order:0;margin-left:0;padding:1px;background:#f0eddf}
+.q31-bar2 .q31-seg button{padding:2px 8px;font-size:11px;font-weight:700;min-height:20px}
+.q31-bar2 .q31-seg button.on{background:#6b7d70;color:#F7F3E9}
+.q31-bar2 .q31-chips{order:1;flex:1 1 auto}
+.q42-row{margin-top:10px;display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.q42-gt{border:1px solid #cfd8cb;background:#fffefa;border-radius:999px;padding:4px 12px;font:inherit;font-size:12.5px;font-weight:700;color:#6b7d70;cursor:pointer;min-height:30px}
+.q42-gt.on{background:#eef2ea;color:#2F4F46;border-color:#A7B89F}
+.q42-row small{color:#7b8a80;font-size:12px}
+/* Day | Whole trip: small and quiet, tucked to the right */
+.topline .toolbar{margin-left:auto}
+.topline .toggle{padding:1px;background:#f0eddf;border:0;box-shadow:none}
+.topline .toggle button{padding:2px 8px;font-size:11px;font-weight:700;min-height:20px;line-height:1.3;color:#8a978d}
+.topline .toggle button.on{background:#6b7d70;color:#F7F3E9;box-shadow:none}

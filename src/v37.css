@@ -1,0 +1,48 @@
+/* v37 - Ideas: tight list, always-visible votes + add to day */
+.short-list{background:#fff;border:1px solid #edf0e9;border-radius:14px;overflow:hidden}
+.short-list:has(.area-group){background:transparent;border:0;overflow:visible}
+.short-list .short-wrap,.area-group .short-wrap,.q37-planned .short-wrap{border:0;border-radius:0;margin:0;background:#fff;border-bottom:1px solid #eef0eb;box-shadow:none}
+.short-list>.short-wrap:last-child,.area-group>.short-wrap:last-child{border-bottom:0}
+.area-group{background:#fff;border:1px solid #edf0e9;border-radius:14px;overflow:hidden;margin:0 0 12px}
+.area-group .area-head{padding:8px 12px;background:#f6f4ea;margin:0}
+.short-wrap .o3-acts,.short-wrap .person-pick{display:flex!important}
+.short-wrap .o3-acts .mv{border:1.5px solid #2F4F46!important;background:#fff!important;color:#2F4F46!important;border-radius:999px!important;padding:3px 10px!important;font-size:12px!important;font-weight:700}
+.q37-when{background:#eaf3e6;color:#2F4F46}
+.q37-edit{display:none}
+.short-wrap.q32-open .q37-edit{display:grid;grid-column:1/-1;gap:6px;margin-top:6px}
+.q37-edit label{display:flex;flex-direction:column;gap:2px;font-size:11.5px;font-weight:700;color:#6b7d70}
+.q37-edit input{height:38px;border:1.5px solid #c8d2c4;border-radius:10px;background:#fffefa;padding:0 10px;font:inherit;font-size:16px;color:#293b34}
+.q37-an{padding:6px 12px;font-size:12px;color:#6b7d70;border-bottom:1px solid #eef0eb;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.q37-an button{border:0;background:#eaf3e6;color:#2F4F46;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700;cursor:pointer}
+.q37-planned{margin-top:14px;background:#fff;border:1px solid #edf0e9;border-radius:14px;overflow:hidden}
+.q37-planned summary{padding:10px 12px;font-weight:800;font-size:14px;color:#6b7d70;cursor:pointer}
+.q37-planned .short-wrap{opacity:.8}
+#q37d{position:fixed;inset:0;z-index:10060;background:rgba(30,45,40,.45);display:flex;align-items:flex-end;justify-content:center}
+.q37d-card{background:#F7F3E9;width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom));color:#2F4F46;max-height:90vh;overflow:auto}
+@media(min-width:700px){#q37d{align-items:center}.q37d-card{border-radius:20px}}
+.q37d-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}.q37d-top strong{font-size:16px}
+.q37d-x{border:0;background:transparent;font-size:18px;width:34px;height:34px;color:#2F4F46}
+.q37d-l{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;opacity:.7;margin:10px 0 6px}.q37d-l small{text-transform:none;font-weight:600}
+.q37d-days{display:flex;flex-wrap:wrap;gap:6px}
+.q37d-days button,.q37d-row button{border:1.5px solid rgba(47,79,70,.3);background:#fff;color:#2F4F46;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700;cursor:pointer}
+.q37d-days button.on,.q37d-row button.on{background:#2F4F46;border-color:#2F4F46;color:#F7F3E9}
+.q37d-row{display:flex;gap:8px;align-items:center}.q37d-row input{height:40px;border:1.5px solid rgba(47,79,70,.3);border-radius:10px;padding:0 10px;font:inherit;font-size:16px;background:#fff;color:#2F4F46}
+.q37d-go{width:100%;height:46px;border-radius:12px;font-size:16px;font-weight:700;margin-top:14px}
+.short-wrap .sl-row{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto auto!important;gap:2px 8px!important;align-items:center!important;padding:8px 8px 8px 12px!important}
+.short-wrap .sl-row>.check-done{grid-column:1!important;grid-row:1/span 2!important;align-self:start!important;margin-top:4px}
+.short-wrap .sl-row>.sl-body{grid-column:2!important;grid-row:1!important;min-width:0}
+.short-wrap .sl-row>.star{grid-column:3!important;grid-row:1!important}
+.short-wrap .sl-row>.o3-menu{grid-column:4!important;grid-row:1!important;position:static}
+.short-wrap .sl-row>.o3-menu .dots{position:static!important}
+.short-wrap .sl-row>.o3-acts{grid-column:2!important;grid-row:2!important;justify-self:start!important;margin:2px 0 0!important}
+.short-wrap .sl-row>.person-pick{grid-column:3/-1!important;grid-row:2!important;justify-self:end!important}
+.short-wrap .sl-row>.q37-edit{grid-column:1/-1!important;grid-row:3!important}
+.short-wrap .sl-title{white-space:normal;word-break:normal;overflow-wrap:anywhere}
+/* itinerary: only show who's going / tentative / note while typing; layout toggle lives in Settings */
+.quickline:not(.q37-typing) .q26-row,.quickline:not(.q37-typing) .q26-opts{display:none!important}
+.quick-hint{display:none!important}
+.q31-opts .q31-seg.sm{display:none!important}
+.q31-chips{display:none!important}
+.q31-opts{justify-content:flex-end}
+.q37-lay{margin:0 0 14px}
+.q31-gap{display:flex;align-items:center;justify-content:space-between}

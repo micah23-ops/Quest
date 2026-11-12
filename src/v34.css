@@ -1,0 +1,78 @@
+/* v34 */
+#q34.on{position:fixed;inset:0;z-index:97;display:flex;align-items:flex-end;justify-content:center}
+.q34-back{position:absolute;inset:0;background:rgba(20,34,28,.45)}
+.q34-sheet{position:relative;background:#FBF8EF;width:100%;max-width:560px;max-height:90vh;overflow:auto;border-radius:22px 22px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+@media(min-width:700px){#q34.on{align-items:center}.q34-sheet{border-radius:22px}}
+.q34-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.q34-top strong{font-size:18px;color:var(--forest,#2F4F46)}
+.q34-x{width:34px;height:34px;border:0;border-radius:10px;background:transparent;color:#5f6e64;font-size:16px}
+.q34-l{display:block;font-size:12.5px;font-weight:700;color:#4a5b50;margin-bottom:10px}
+.q34-l input{display:block;width:100%;box-sizing:border-box;margin-top:4px;border:1.5px solid #c8d2c4;border-radius:12px;background:#fffefa;padding:10px 12px;font:inherit;font-size:16px}
+.q34-pick{display:block;border:1.5px dashed #b5c4b0;border-radius:12px;padding:12px;text-align:center;font-weight:800;font-size:14px;color:#2F4F46;cursor:pointer;margin-bottom:12px}
+.q34-cs{display:flex;flex-direction:column;gap:6px}
+.q34-c{display:flex;align-items:center;gap:10px;text-align:left;border:1.5px solid #e3e8dc;background:#fffefa;border-radius:12px;padding:10px 12px;font:inherit;cursor:pointer;min-height:48px}
+.q34-c.on{border-color:#2F4F46;background:#f1f6ee}
+.q34-r{width:18px;height:18px;border-radius:50%;border:2px solid #b5c4b0;flex:0 0 18px}
+.q34-c.on .q34-r{border-color:#2F4F46;background:radial-gradient(#2F4F46 45%,transparent 50%)}
+.q34-ct{display:flex;flex-direction:column;min-width:0}.q34-ct b{font-size:14.5px;color:#24352d}.q34-ct small{font-size:12px;color:#566860}
+.q34-hint{color:#7b8a80;font-size:13px}
+.q34-foot{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.q34-foot .primary{align-self:flex-end}
+.q34-note{font-size:12.5px;color:#4f7b5e;font-weight:700}
+.q34-auto{height:4px;border-radius:99px;background:#e3e8dc;overflow:hidden}
+.q34-auto i{display:block;height:100%;background:#2F4F46;animation:q34bar 3s linear forwards}
+@keyframes q34bar{from{width:0}to{width:100%}}
+/* v35-ish tweaks (shipped with v34 css) */
+.q31-time{display:flex;gap:10px;align-items:flex-end;margin-bottom:10px;flex-wrap:wrap}
+.q31-time label{display:flex;flex-direction:column;font-size:12px;font-weight:800;color:#4a5b50;gap:3px}
+.q31-time input{border:1.5px solid #c8d2c4;border-radius:12px;background:#fffefa;padding:9px 10px;font:inherit;font-size:16px;min-height:42px}
+.q31-tn{font-size:12px;color:#566860;padding-bottom:12px}
+.q31-grid{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:6px}
+.q31-gh{margin-top:4px}
+.q31-gn{text-align:center;font-weight:800;font-size:13px;border-radius:10px;padding:5px 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.q31-gc{display:flex;flex-direction:column;gap:6px;min-width:0}
+.q31-cr{background:#fffefa;border:1px solid #e3e8dc;border-radius:10px;padding:6px 8px;cursor:pointer;min-width:0}
+.q31-cr b{display:block;font-size:11.5px;color:var(--forest,#2F4F46)}
+.q31-cr span{display:block;font-size:13.5px;font-weight:800;color:#24352d;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.q31-cr.tent{opacity:.72;border-style:dashed}
+.q31-cr.clash{border-color:#e0b34a}
+.q31-cr .q31-q{margin-left:4px}
+/* Ideas: tighter cards, collapsible groups */
+.short-wrap{margin-bottom:5px}
+.short-wrap .sl-row{padding-top:6px;padding-bottom:6px;row-gap:2px}
+.short-wrap .sl-title{font-size:15px}
+.short-wrap .sl-tags{margin-top:0}
+.area-group{margin:8px 0 2px}
+.area-head{cursor:pointer;user-select:none}
+.area-head::after{content:'▾';margin-left:auto;color:#7b8a80}
+.area-group.q35-shut .area-head::after{content:'▸'}
+.area-group.q35-shut>*:not(.area-head){display:none}
+.q31-who2{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px;font-size:12px;font-weight:800;color:#4a5b50}
+.q31-wc{border:1.5px solid #cfd8cb;background:#fffefa;border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;font-weight:700;color:#5f6e64;cursor:pointer;min-height:34px}
+.q31-wc.on{background:#2F4F46;border-color:#2F4F46;color:#F7F3E9}
+/* v35 tweaks: compact Mine/Group + names row, All/names, tighter ideas, hidden empty compare */
+.q31-bar2{display:flex;align-items:center;gap:8px;margin:6px 0 6px;flex-wrap:nowrap;min-width:0}
+.q31-bar2 .q31-seg{flex:0 0 auto;padding:2px}
+.q31-bar2 .q31-seg button{padding:4px 11px;font-size:12.5px;min-height:28px}
+.q31-bar2 .q31-chips{flex:1 1 auto;min-width:0;align-items:center;padding:0;margin:0;gap:5px}
+.q31-bar2 .q31-chip{padding:3px 10px;font-size:12px;min-height:28px;border-width:1px}
+.q31-eye{flex:0 0 auto;display:inline-flex;align-items:center;color:#6b7d70;padding-right:1px}
+.q31-who{font-size:11.5px;font-weight:800;color:#4a5b50;background:#eef2ea;border-radius:999px;padding:2px 8px;align-self:center;white-space:nowrap;max-width:90px;overflow:hidden;text-overflow:ellipsis;display:inline-block}
+.q31-who.all{background:transparent;color:#8a998f;font-weight:700}
+.q27-cmp.none{display:none}
+.short-wrap.q32-open+.q27-cmp.none{display:block;margin:0 0 6px}
+.short-list{gap:4px!important}
+.short-wrap{margin-bottom:4px}
+.q28-pv:empty{display:none}
+.q26 .q26-row{display:flex;order:3}
+.quickline.q26 .q26-opts{order:2}
+.quickline.q26 .who-select{align-items:center}
+.quickline.q26 .who-select::before{content:"Who\2019s going?";font-size:11.5px;font-weight:800;color:#6b7d70;margin-right:4px;align-self:center}
+.q31-opts{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.q31-seg.sm{padding:2px}
+.q31-seg.sm button{padding:3px 11px;font-size:12px;min-height:26px}
+.q31-gt2{border:1px solid #cfd8cb;background:#fffefa;border-radius:999px;padding:3px 11px;font:inherit;font-size:12px;font-weight:700;color:#6b7d70;cursor:pointer;min-height:28px}
+.q31-gt2.on{background:#eef2ea;color:#2F4F46;border-color:#A7B89F}
+.q30-foot .primary.alt{background:#F4D06F;color:#2F4F46}
+.q30-sub{display:flex;gap:16px;justify-content:center;margin-top:8px}
+.q30-lk{border:0;background:none;color:#2F4F46;text-decoration:underline;font-size:13px;cursor:pointer;padding:4px}

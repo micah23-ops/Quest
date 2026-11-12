@@ -1,0 +1,21 @@
+.clip{display:inline-flex;align-items:center;gap:2px;color:#6b8d7e;font-weight:700}
+.ev-detail{flex:0 0 100%;width:100%;margin-top:8px;padding-top:8px;border-top:1px dashed rgba(35,76,61,.2);display:grid;gap:8px;font-size:13.5px}
+.event.open{flex-wrap:wrap}
+.evd-row{display:flex;justify-content:space-between;align-items:center;gap:8px}.evd-note{white-space:pre-wrap;color:var(--ink)}.evd-empty{color:var(--muted);font-size:12.5px}
+.att-box{margin:6px 0 10px;padding:10px;border:1.5px dashed #b9c9bd;border-radius:14px;background:#fffdf7}
+.att-head{font-weight:700;font-size:13px;margin-bottom:8px}.att-head span{font-weight:500;color:var(--muted);margin-left:4px}
+.att-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}.att{position:relative}
+.att-open{width:84px;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:0;overflow:hidden;cursor:pointer;text-align:left}
+.att-open img,.att-doc{display:grid;place-items:center;width:84px;height:84px;object-fit:cover;background:#eef3ee;font-weight:800;color:var(--forest);font-size:13px}
+.att-open small{display:block;padding:3px 6px;font-size:10.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.att-x{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#c0463a;color:#fff;font-size:15px;line-height:1;cursor:pointer}
+.att-add{display:inline-block;cursor:pointer}
+.viewer{position:fixed;inset:0;z-index:100;background:rgba(18,28,24,.94);display:flex;flex-direction:column;color:#fff}
+.v-top{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;gap:10px}.v-top b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v-x{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:26px;cursor:pointer}
+.v-body{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center;-webkit-overflow-scrolling:touch}
+.v-img{max-width:100%;max-height:100%;object-fit:contain;cursor:zoom-in;background:#fff}
+.v-body.zoom{display:block}.v-body.zoom .v-img{max-width:none;max-height:none;width:240%;cursor:zoom-out}
+.v-foot{display:flex;justify-content:space-between;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));font-size:13px;opacity:.9}.v-foot a{color:#fff;font-weight:700}
+.v-pdf{text-align:center}.v-pdf p{font-size:28px;font-weight:800;margin:0 0 14px}
+.v-img{min-width:min(100%,320px)}

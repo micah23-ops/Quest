@@ -1,0 +1,19 @@
+/* v32 */
+#q28fab{display:none!important}
+#root{padding-bottom:120px}
+.q26 .q26-row{display:none}
+.q32-qa{margin:-2px 0 8px}.q32-qa button{background:none;border:0;padding:4px 2px;font:inherit;font-size:12.5px;font-weight:700;color:#4f7b5e;cursor:pointer}
+.q32-qa.inl{display:inline-block;margin-right:12px}
+.q30-ask-row{display:inline-block}
+.land-wrap{max-height:84px;overflow:hidden}
+/* compact Ideas rows */
+.short-wrap .sl-row{display:flex;align-items:center;gap:10px;padding:8px 12px;flex-wrap:wrap}
+.short-wrap .sl-body{flex:1;min-width:0;cursor:pointer}
+.short-wrap .sl-title{font-size:15.5px;line-height:1.25}
+.short-wrap .sl-tags{display:flex;gap:6px;flex-wrap:nowrap;overflow:hidden;margin-top:2px}
+.short-wrap:not(.q32-open) .sl-note,.short-wrap:not(.q32-open) .o3-acts,.short-wrap:not(.q32-open) .person-pick{display:none}
+.short-wrap.q32-open .o3-acts,.short-wrap.q32-open .person-pick{flex:0 0 auto}
+.short-wrap.q32-open .sl-row{padding-bottom:12px}
+/* readable secondary text */
+.sl-tags .tag.area,.q31-s,.q31-t small,.q31-gap,.sl-note{color:#566860}
+.q31-gap.sm{color:#566860}

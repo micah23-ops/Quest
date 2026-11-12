@@ -1,0 +1,8 @@
+.event.ghost{background-clip:padding-box;border:2px dashed var(--gc,#cfd8cc);opacity:.92}
+.ev-main.static{cursor:default;padding-right:13px}
+.ghost-msg{font-size:11px;font-weight:700;color:#6f7d73;margin-top:5px}
+.ev-join{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;margin:0 10px 9px}
+.event .ev-join:first-child{margin:7px 0 0;justify-content:flex-start}
+.ghost .ev-join{justify-content:flex-start;margin:7px 0 0}
+.mv.acc{background:#2e8b57;border-color:#2e8b57;color:#fff}
+.event.shared{background:#e7f1ea;border-color:#cfe2d4}

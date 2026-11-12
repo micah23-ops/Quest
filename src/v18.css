@@ -1,0 +1,23 @@
+/* v18: copy + clarity */
+.hub-sub{margin:0 2px 2px;font-size:12.5px;color:var(--muted)}
+.idea-empty{margin:2px 2px 12px;color:#8a978d;font-size:14px;text-align:center;padding:10px 0}
+.section-kicker{display:block;font-size:12.5px;line-height:1.35;color:var(--muted);margin:3px 0 0}
+.vote{display:flex;align-items:center}
+.pv.me{box-shadow:0 0 0 1.5px #fff,0 0 0 2.5px var(--forest)}
+@media(max-width:420px){.idea-pills{gap:5px}.pill{padding:7px 10px;font-size:12px}}
+.idea-bot{row-gap:8px}
+.topline .section-kicker{position:relative;z-index:2;text-shadow:0 0 5px #f7f3e9,0 0 5px #f7f3e9,0 0 2px #f7f3e9}
+.sl-row .person-pick{gap:4px}
+.sl-row .person-pick button{width:auto;min-width:22px;height:22px;min-height:22px;padding:0 5px;border-radius:7px;font-size:10px;line-height:1}
+.person-pick button.v-yes,.person-pick button.v-yes.on{background:#dbe9d6;border-color:#b3cdaa;color:#3d6a49}
+.person-pick button.v-maybe{background:#f8eac0;border-color:#e6d295;color:#76601f}
+.person-pick button.v-no{background:#f3dedb;border-color:#e0bdb7;color:#94625a}
+.person-pick button.me{box-shadow:0 0 0 1.5px #fff,0 0 0 2.5px var(--forest)}
+/* softer vote colours everywhere */
+.pv.yes{background:#dbe9d6;border-color:#b3cdaa;color:#3d6a49}
+.pv.maybe{background:#f8eac0;border-color:#e6d295;color:#76601f}
+.pv.no{background:#f3dedb;border-color:#e0bdb7;color:#94625a}
+.vote button.on-yes{background:#9cc7a4;color:#1f4d33}
+.vote button.on-maybe{background:#f1d98a;color:#5b4608}
+.vote button.on-no{background:#e2b3ac;color:#5e2a24}
+.ovs-btns .cur{box-shadow:inset 0 0 0 2px var(--forest)}

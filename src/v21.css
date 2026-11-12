@@ -1,0 +1,19 @@
+.sp-ov{position:fixed;inset:0;z-index:90;background:rgba(30,45,38,.45);display:flex;align-items:flex-end;justify-content:center}
+.sp-card{background:var(--paper,#fff);color:var(--ink,#293b34);width:100%;max-width:560px;max-height:88vh;display:flex;flex-direction:column;border-radius:20px 20px 0 0;box-shadow:0 -10px 40px rgba(0,0,0,.18);padding:18px 16px calc(14px + env(safe-area-inset-bottom))}
+.sp-h{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.sp-title{font-size:18px;display:block}
+.sp-sub{font-size:13px;color:var(--muted,#7c887f);margin-top:3px;line-height:1.35}
+.sp-close{border:0;background:transparent;font-size:26px;line-height:1;color:var(--muted,#7c887f);cursor:pointer;padding:0 4px}
+.sp-list{list-style:none;margin:12px 0;padding:0;overflow:auto;display:flex;flex-direction:column;gap:8px;min-height:60px}
+.sp-list li{border:1px solid var(--line,#e8eae2);border-radius:14px;padding:9px 10px;background:var(--bg,#f8f7f2)}
+.sp-top{display:flex;gap:6px;align-items:center}
+.sp-name{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-weight:600;color:inherit;padding:4px 2px;border-bottom:1px dashed transparent}
+.sp-name:focus{outline:none;border-bottom-color:var(--forest,#234c3d)}
+.sp-x{border:0;background:transparent;font-size:20px;color:var(--muted,#7c887f);cursor:pointer;padding:0 6px}
+.sp-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.spc{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--sage,#e6f1e8);color:var(--forest,#234c3d);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.spc.d{background:var(--blue,#eaf2fb)}.spc.t{background:var(--yellow,#fbefbd)}.spc.l{background:transparent;border:1px solid var(--line,#e8eae2);color:var(--muted,#7c887f)}.spc.w{background:transparent;color:var(--muted,#7c887f);font-style:italic}
+.sp-foot{display:flex;gap:8px;justify-content:flex-end}
+.sp-foot .primary:disabled{opacity:.55}
+body.sp-open{overflow:hidden}
+@media(min-width:700px){.sp-ov{align-items:center}.sp-card{border-radius:20px}}

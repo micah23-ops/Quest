@@ -1,0 +1,20 @@
+/* v14: happier look — cream paper, sunny accents, rounder, floating tab bar */
+:root{--bg:#FBF6E8;--sunny:#F4D06F}
+body{background-color:#FBF6E8;background-image:radial-gradient(#e9dfc4 1.1px,transparent 1.2px);background-size:22px 22px}
+.panel,.linecard,.sheet,.details-card,.addgroup{border-radius:20px}
+.linecard,.panel.sheet{border:1.5px solid #efe6cd;box-shadow:0 6px 0 #f3ebd3}
+.primary{border-radius:14px;box-shadow:0 3px 0 rgba(0,0,0,.18);transition:transform .08s,box-shadow .08s}
+.primary:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.18)}
+.small-btn,.mv{border-radius:99px}
+/* highlighter titles */
+.topline .section-title{display:inline-block;background:linear-gradient(transparent 62%,rgba(244,208,111,.75) 62%,rgba(244,208,111,.75) 90%,transparent 90%);padding:0 4px;margin-left:-4px}
+/* sticker shapes */
+.topline .section-title{font-family:inherit}
+.topline .section-title:after{content:"";display:inline-block;width:20px;height:20px;margin-left:10px;vertical-align:-2px;background:var(--sunny);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);transform:rotate(14deg)}
+/* sunny yellow: the selected day and one cheerful spot */
+.days button.active,button[data-date].active{background:var(--sunny)!important;color:#2F4F46!important;border-color:#e8bf4f!important}
+.days button.active strong,button[data-date].active strong{color:#2F4F46}
+/* floating pill tab bar */
+@media(max-width:800px){.bottom-nav{left:14px!important;right:14px!important;bottom:calc(10px + env(safe-area-inset-bottom))!important;border:1.5px solid #e5dcc0!important;border-radius:30px!important;background:#fffdf5f2!important;box-shadow:0 8px 24px rgba(47,79,70,.16)!important;padding:4px 6px!important}
+.shell{padding-bottom:96px!important}.toast{bottom:calc(92px + env(safe-area-inset-bottom))!important}}
+.day-empty,.empty-state{background:#fffdf5;border:2px dashed #e6d9ac;border-radius:18px;padding:18px;text-align:center;color:#7a6f45}

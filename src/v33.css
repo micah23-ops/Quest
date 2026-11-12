@@ -1,0 +1,23 @@
+/* v33 */
+.q33-wrap{display:flex;flex-direction:column;gap:12px}
+.q33-title h2{margin:4px 0 2px;font-size:26px;color:var(--forest,#2F4F46)}
+.q33-title p{margin:0;font-size:13px;color:#566860}
+.q33-todo{padding:14px}
+.q33-h{display:flex;align-items:baseline;justify-content:space-between}
+.q33-h h3{margin:0;font-size:17px;color:var(--forest,#2F4F46)}
+.q33-h small{color:#566860;font-weight:700}
+.q33-add{display:flex;gap:8px;margin:10px 0}
+.q33-add input{flex:1;min-width:0;box-sizing:border-box;border:1.5px solid #c8d2c4;border-radius:12px;background:#fffefa;padding:10px 12px;font:inherit;font-size:16px}
+.q33-list{display:flex;flex-direction:column}
+.q33-it{display:flex;align-items:center;gap:10px;padding:10px 4px;border-top:1px solid #edf0e8;min-height:44px;cursor:pointer}
+.q33-it:first-child{border-top:0}
+.q33-it input{width:22px;height:22px;accent-color:#2F4F46;flex:0 0 22px}
+.q33-it span{flex:1;font-size:15px;color:#24352d}
+.q33-it.done span{text-decoration:line-through;color:#7b8a80}
+.q33-x{border:0;background:transparent;color:#a3aea6;font-size:14px;width:32px;height:32px;cursor:pointer}
+.q33-dtog{border:0;background:none;font:inherit;font-weight:800;font-size:13px;color:#566860;padding:8px 2px;cursor:pointer}
+.q33-none{color:#7b8a80;font-size:13px;margin:6px 0}
+.q33-hub .dtrip,.q33-hub .dc-head{display:none}
+.q33-hub .details-card{border:0;box-shadow:none;padding:0;background:transparent}
+.q33-hub .hub-tabs,.q33-hub .hub-note,.q33-hub .hub-sub{display:none}
+.masthead [data-act=details]{display:none}
