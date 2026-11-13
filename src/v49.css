@@ -1,0 +1,15 @@
+/* v49: trip budget tracker */
+.qbud h3{margin:0 0 6px}
+.qbud-bar{height:8px;border-radius:999px;background:#E4DECB;overflow:hidden;margin:6px 0}
+.qbud-fill{height:100%;border-radius:999px;background:#2F6F4A}
+.qbud.near .qbud-fill{background:#C9922B}
+.qbud.over .qbud-fill{background:#C8553D}
+.qbud-line{font-size:14px;color:#2F4F46}
+.qbud-line b{font-weight:800}
+.qbud.over .qbud-line b{color:#C8553D}
+.qbud.near .qbud-line b{color:#9a6b1a}
+.qbud-note{display:block;color:#6B7A72;font-size:12px;margin-top:3px}
+.qbud-row{display:flex;gap:8px;margin:6px 0}
+.qbud-row select{flex:0 0 96px}
+.qbud-row input{flex:1;min-width:0}
+.qbud-err{color:#a4452c;font-size:13px;margin-top:4px}

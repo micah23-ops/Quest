@@ -60,7 +60,7 @@ function paintPeek(){const p=planOf(PK);if(!p){closeAll();return}
 
 function openEdit(id){const p=planOf(id);if(!p)return;PK=null;
  const cur=curOf(p),all=isAllP(p);
- E={id,name:p.name,date:p.date,start:p.start||'',end:p.end||'',who:all?allIds():p.who.slice(),all,place:p.place||'',area:p.area||'',areaManual:!!(p.area&&p.area.trim()),cost:p.cost_minor>0?(window.__qst?String(window.__qst.cfg&&p.cost_minor/(['KRW','JPY'].includes(cur)?1:100)):''):'',cur,notes:p.notes||'',link:p.link||'',tent:!!p.tent,err:''};
+ E={id,name:p.name,date:p.date,start:p.start||'',end:p.end||'',who:all?allIds():p.who.slice(),all,place:p.place||'',area:p.area||'',areaManual:!!(p.area&&p.area.trim()),cost:p.cost_minor>0?(window.__qst?String(window.__qst.cfg&&p.cost_minor/(['KRW','JPY'].includes(cur)?1:100)):''):'',cur,notes:p.notes||'',link:p.link||'',tent:!!p.tent,err:'',more:!!(p.place||p.area||p.cost_minor>0||p.notes||p.link)};
  if(p.cost_minor>0)E.cost=(['KRW','JPY'].includes(cur)?String(p.cost_minor):(p.cost_minor/100).toFixed(2).replace(/\.00$/,''));
  paintEdit()}
 function chipsHtml(){return `<div class="q40-chips"><button type="button" class="q40-chip${E.all?' on':''}" data-q40="who" data-id="*">All</button>${A.people.map(p=>`<button type="button" class="q40-chip${!E.all&&E.who.includes(p.id)?' on':''}" data-q40="who" data-id="${p.id}">${esc(p.id===A.me?'You':first(p.name))}</button>`).join('')}</div>`}
@@ -73,12 +73,13 @@ function paintEdit(){const h=host(),keep=document.activeElement&&document.active
  ${f('name','Name',`<input class="q40-in" data-k="name" value="${esc(E.name)}" autocomplete="off">`)}
  <div class="q40-two">${f('date','Date',`<select class="q40-in" data-k="date">${dopts}</select>`)}<div class="q40-f"><span>Time</span><div class="q40-tt"><input class="q40-in" type="time" data-k="start" value="${esc(E.start)}" aria-label="Start time"><i>–</i><input class="q40-in" type="time" data-k="end" value="${esc(E.end)}" aria-label="End time"></div></div></div>
  <div class="q40-f"><span>Who’s going</span>${chipsHtml()}</div>
- ${f('place','Address',`<input class="q40-in" data-k="place" value="${esc(E.place)}" placeholder="Street, building or place" autocomplete="off">`)}
+ <button type="button" class="q40-more" data-q40="more">${E.more?'▾ Hide more details':'▸ More details (address, price, notes, link)'}</button>
+ ${E.more?`${f('place','Address',`<input class="q40-in" data-k="place" value="${esc(E.place)}" placeholder="Street, building or place" autocomplete="off">`)}
  ${f('area','Area',`<input class="q40-in" data-k="area" value="${esc(E.area)}" placeholder="Auto-fills from the address" autocomplete="off">`)}
  <div class="q40-f"><span>Price</span><div class="q40-tt"><select class="q40-in q40-cs" data-k="cur" aria-label="Currency">${curs}</select><input class="q40-in" data-k="cost" inputmode="decimal" placeholder="0" value="${esc(E.cost)}" aria-label="Price" autocomplete="off"></div></div>
  ${f('notes','Notes',`<textarea class="q40-in" data-k="notes" rows="3">${esc(E.notes)}</textarea>`)}
  ${f('link','Link',`<input class="q40-in" data-k="link" value="${esc(E.link)}" placeholder="https://" autocomplete="off">`)}
- <div class="q40-attwrap">${window.__att?window.__att.editor('plan',E.id):''}</div>
+ <div class="q40-attwrap">${window.__att?window.__att.editor('plan',E.id):''}</div>`:''}
  <div class="q40-err">${esc(E.err)}</div>
  <div class="q40-foot"><button type="button" class="q40-pri" data-q40="save">Save</button><button type="button" class="q40-sec" data-q40="close">Cancel</button><button type="button" class="q40-sec warn" data-q40="del" data-id="${E.id}">Delete</button></div></div>`;
  if(keep){const e=h.querySelector('[data-k="'+keep+'"]');if(e&&e.tagName!=='SELECT')e.focus({preventScroll:true})}}
@@ -107,6 +108,7 @@ document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest
  if(a==='edit'){openEdit(b.dataset.id);return}
  if(a==='save'){saveEdit();return}
  if(a==='who'&&E){setWho(b.dataset.id);paintEdit();return}
+ if(a==='more'&&E){E.more=!E.more;paintEdit();return}
  if(a==='del'){const id=b.dataset.id;closeAll();doDelete('plan',id);return}
  if(a==='exp'){const p=planOf(b.dataset.id);closeAll();if(p&&window.questLogExpense)window.questLogExpense(p);return}
 },true);
