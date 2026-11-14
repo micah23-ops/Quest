@@ -77,11 +77,14 @@ function deco(){
   if(tg){const ln=tg.querySelector('.q44ln');if(ln){ln.dataset.q49=okp(it)?'show':'link';ln.dataset.id=id;ln.style.cursor='pointer'}}
   {const nt=r.querySelector('.sl-note');if(nt){nt.dataset.q49=okp(it)?'show':'link';nt.dataset.id=id;nt.style.cursor='pointer'}}
   if(tg&&okp(it)){const q=tg.querySelector('.q43pin');if(q)q.dataset.q49='show',q.dataset.id=id}
-  let d=r.querySelector('.q49d');const parts=[];
-  if(okp(it)){if(NEARON&&NEAR)parts.push(kmf(hv(NEAR,it))+' from me');if(hs.length){const m=Math.min.apply(null,hs.map(h=>hv(h,it)));parts.push(kmf(m)+' from hotel')}}
-  const txt=parts.join(' | ');
-  if(!txt){if(d)d.remove();return}
-  if(!d&&body){d=document.createElement('div');d.className='q49d';body.appendChild(d)}if(d&&d.textContent!==txt)d.textContent=txt});
+  /* "from me" stays visible on the collapsed row — it's the one people actually scan a list by
+     ("what's close to me right now?"). "from hotel" is a slower, planning-time question, so it
+     only shows once you open the card, same as the address note and other detail already do. */
+  let d=r.querySelector('.q49d'),dh=r.querySelector('.q49dh');
+  const meTxt=(okp(it)&&NEARON&&NEAR)?kmf(hv(NEAR,it))+' from me':'';
+  const hotelTxt=(okp(it)&&hs.length)?kmf(Math.min.apply(null,hs.map(h=>hv(h,it))))+' from hotel':'';
+  if(!meTxt){if(d)d.remove()}else{if(!d&&body){d=document.createElement('div');d.className='q49d';body.appendChild(d)}if(d&&d.textContent!==meTxt)d.textContent=meTxt}
+  if(!hotelTxt){if(dh)dh.remove()}else{if(!dh&&body){dh=document.createElement('div');dh.className='q49d q49dh';body.appendChild(dh)}if(dh&&dh.textContent!==hotelTxt)dh.textContent=hotelTxt}});
  const list=document.querySelector('.short-list');
  let leg=document.querySelector('.q49leg');let off=false;try{off=localStorage.getItem('q49leg')==='0'}catch(e){}
  if(list&&!off&&document.querySelector('.sl-row')){if(!leg){leg=document.createElement('div');leg.className='q49leg';list.insertBefore(leg,list.firstChild)}
