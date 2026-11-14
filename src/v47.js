@@ -70,14 +70,14 @@ function deco(){
   {const nt=r.querySelector('.sl-note');if(nt){nt.dataset.q49=okp(it)?'show':'link';nt.dataset.id=id;nt.style.cursor='pointer'}}
   if(tg&&okp(it)){const q=tg.querySelector('.q43pin');if(q)q.dataset.q49='show',q.dataset.id=id}
   let d=r.querySelector('.q49d');const parts=[];
-  if(okp(it)){if(NEARON&&NEAR)parts.push(kmf(hv(NEAR,it))+' from you');if(hs.length){const m=Math.min.apply(null,hs.map(h=>hv(h,it)));parts.push(kmf(m)+' from hotel')}}
+  if(okp(it)){if(NEARON&&NEAR)parts.push(kmf(hv(NEAR,it))+' from me');if(hs.length){const m=Math.min.apply(null,hs.map(h=>hv(h,it)));parts.push(kmf(m)+' from hotel')}}
   const txt=parts.join(' | ');
   if(!txt){if(d)d.remove();return}
   if(!d&&body){d=document.createElement('div');d.className='q49d';body.appendChild(d)}if(d&&d.textContent!==txt)d.textContent=txt});
  const list=document.querySelector('.short-list');
  let leg=document.querySelector('.q49leg');let off=false;try{off=localStorage.getItem('q49leg')==='0'}catch(e){}
  if(list&&!off&&document.querySelector('.sl-row')){if(!leg){leg=document.createElement('div');leg.className='q49leg';list.insertBefore(leg,list.firstChild)}
-  const h='<span>📍 on the map · tap an address to see it</span><button type="button" data-q49="near" class="'+(NEARON?'on':'')+'">'+(NEARON?'Near me: on':'Near me')+'</button><button type="button" class="lx" data-q49="legx" aria-label="Hide">✕</button>';
+  const h='<span>📍 on the map · tap an address to see it</span><button type="button" data-q49="near" class="'+(NEARON?'on':'')+'">'+(NEARON?'Distance from me: on':'Distance from me')+'</button><button type="button" class="lx" data-q49="legx" aria-label="Hide">✕</button>';
   if(leg.dataset.h!==h){leg.innerHTML=h;leg.dataset.h=h}}
  else if(leg&&off)leg.remove()}
 function goMap(id,link){const Q=window.__q46;if(!Q)return;const M=Q.M;M.rt=false;M.pf=null;M.ideas=true;M.fit=true;M.sel=link?null:'idea:'+id;U.tab='map';render();
