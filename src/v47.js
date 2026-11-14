@@ -162,7 +162,11 @@ function moveToIdeas(key){const[k,id]=String(key).split(':');if(k!=='plan')retur
  try{toastUndo('Moved to Ideas',()=>{mut(()=>{D().plans=sn.plans;D().shortlist=sn.shortlist})})}catch(e){}}
 function backChip(){const Q=window.__q46;if(!Q)return;const M=Q.M;if(!M.rt){M.fromIdeas=false}const has=document.querySelector('[data-q49=toideas]');const anchor=document.querySelector('.q46b[data-q46=rtclear]');const want=M.rt&&M.fromIdeas&&anchor;if(want&&!has){const b=document.createElement('button');b.type='button';b.className='q46b alt';b.dataset.q49='toideas';b.textContent='← Ideas';anchor.parentNode.insertBefore(b,anchor)}else if(has&&!want)has.remove()}
 let raf=0;new MutationObserver(()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;try{mapUi();backChip();gmRoute()}catch(e){}})}).observe(document.body,{childList:true,subtree:true});
-document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-q49]');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const a=b.dataset.q49;
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-q49]');if(!b){
+  if(e.target.id==='q49p'){closePP();return}
+  if(e.target.id==='q49m'){closePlan();return}
+  return}
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const a=b.dataset.q49;
  if(a==='near'){if(NEARON){NEARON=false;deco();return}if(!navigator.geolocation){try{toast('Your phone did not share location')}catch(x){}return}
   navigator.geolocation.getCurrentPosition(p=>{NEAR={lat:p.coords.latitude,lng:p.coords.longitude};NEARON=true;deco()},()=>{try{toast('Allow location to see how far things are from you')}catch(x){}},{enableHighAccuracy:false,timeout:10000,maximumAge:120000});return}
  if(a==='legx'){try{localStorage.setItem('q49leg','0')}catch(x){}const l=document.querySelector('.q49leg');if(l)l.remove();return}

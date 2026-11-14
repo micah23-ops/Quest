@@ -12,8 +12,12 @@
 .short-wrap:has(.ef) .q37-edit{display:none!important}
 .q44ln{border:0;background:none;color:#6b8d7e;cursor:pointer;font:inherit;font-size:12.5px;font-weight:600;padding:0;text-decoration:underline dotted;min-height:24px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
 .q44ln.set{color:#2F6F4A;text-decoration:none}
-.q44day{display:inline-flex;align-items:center;gap:5px;margin-top:6px;border:1px solid #D9D3C2;background:#FBF8F0;color:#2F4F46;border-radius:999px;padding:7px 13px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;min-height:32px}
-.q44day.on{background:#2F4F4610;border-color:#2F4F4640;color:#2F4F46}
+/* a plain text link, not a filled pill button — this is the least important action on the
+   row (vote / check-done are the primary ones) and a bordered pill next to small tags read
+   as oversized and heavy */
+.q44day{display:inline-flex;align-items:center;gap:4px;margin-top:5px;border:0;background:transparent;color:#5c7a68;border-radius:8px;padding:2px 0;font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;min-height:0}
+.q44day:hover{text-decoration:underline}
+.q44day.on{color:#2F4F46}
 .q43find{border:1px solid #cfd8cb;background:#fffefa;border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;font-weight:600;color:#2F4F46;cursor:pointer;min-height:32px}
 .q43find{position:relative;z-index:2}
 .q41-bs,.q41-bs.n1{justify-content:flex-end}

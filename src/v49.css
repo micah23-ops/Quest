@@ -1,13 +1,37 @@
 /* v49: trip budget tracker */
-.qbud h3{margin:0 0 6px}
-.qbud-bar{height:8px;border-radius:999px;background:#E4DECB;overflow:hidden;margin:6px 0}
+/* the place-picker / "Plan my days" / "Schedule at" popups (#q49p, #q49m, #q50s in v47.js)
+   never had a stylesheet for their own backdrop+sheet wrapper — only their *inner* contents
+   were styled via an injected <style> tag, so .q49back/.q49sheet fell back to plain block
+   flow with no fixed position, centering or backdrop. That's why the popup could show up
+   "in a weird place": it rendered wherever an unstyled div happened to land in the page,
+   instead of as a sheet over everything else. Mobile: bottom sheet. Desktop: centered modal. */
+.q49back{position:fixed;inset:0;z-index:200;background:rgba(20,32,27,.45);display:flex;align-items:flex-end;justify-content:center;padding:0}
+.q49sheet{background:#fff;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;border-radius:20px 20px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(20,32,27,.25);-webkit-overflow-scrolling:touch}
+.q49h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.q49h span{font-weight:800;font-size:16px;color:#2F4F46;overflow-wrap:anywhere}
+.q49h button{border:0;background:#F3F1E6;width:32px;height:32px;min-width:32px;border-radius:50%;font-size:14px;color:#2F4F46;cursor:pointer;flex:none}
+.q49s{color:#6B7A72;font-size:13px;margin:4px 0}
+@media(min-width:620px){.q49back{align-items:center;padding:20px}.q49sheet{border-radius:20px;max-height:80vh}}
+.qbud-edit h3{margin:0 0 6px}
+/* unset state: a small out-of-the-way text link, not a card */
+.qbud-mini{display:block;margin:10px 0 2px;border:0;background:transparent;color:#6B7A72;font-size:12.5px;font-weight:700;padding:2px 0;text-align:left}
+.qbud-mini:hover{color:#2F6F4A}
+/* set state: a slim strip below Balances, not a lead card */
+.qbud-strip{margin:14px 0 2px;padding:11px 13px;border:1px solid #ECE6D4;border-radius:14px;background:#FBF9F1}
+.qbud-strip.near{border-color:#f0ddb3}
+.qbud-strip.over{border-color:#f0cdc3}
+.qbud-top{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.qbud-amt{font-weight:800;font-size:15px;color:#2F4F46}
+.qbud-strip.near .qbud-amt{color:#9a6b1a}
+.qbud-strip.over .qbud-amt{color:#C8553D}
+.qbud-of{color:#6B7A72;font-size:12px;flex:1;min-width:0}
+.qbud-top .qst-dt{margin-left:auto}
+.qbud-bar{height:6px;border-radius:999px;background:#E4DECB;overflow:hidden;margin:7px 0 6px}
 .qbud-fill{height:100%;border-radius:999px;background:#2F6F4A}
-.qbud.near .qbud-fill{background:#C9922B}
-.qbud.over .qbud-fill{background:#C8553D}
-.qbud-line{font-size:14px;color:#2F4F46}
-.qbud-line b{font-weight:800}
-.qbud.over .qbud-line b{color:#C8553D}
-.qbud.near .qbud-line b{color:#9a6b1a}
+.qbud-strip.near .qbud-fill{background:#C9922B}
+.qbud-strip.over .qbud-fill{background:#C8553D}
+.qbud-line{font-size:12.5px;color:#6B7A72}
+.qbud-line b{font-weight:800;color:#2F4F46}
 .qbud-note{display:block;color:#6B7A72;font-size:12px;margin-top:3px}
 .qbud-row{display:flex;gap:8px;margin:6px 0}
 .qbud-row select{flex:0 0 96px}

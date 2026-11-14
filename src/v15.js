@@ -1,7 +1,8 @@
 /* v15: brand assets, auth/trips screens, idea-lab cards, owner-set votes, macro categories, shortlist top bar */
 (()=>{
-const WM='brand/quest-wordmark-forest.svg';
-const wm=c=>`<img class="${c}" src="${WM}" alt="Quest" width="575" height="212">`;
+/* the traced quest-wordmark-forest.svg asset is missing the counter-hole subpath for
+   "e" (it renders as a solid blob), so the wordmark is drawn as styled text instead. */
+const wm=c=>`<span class="${c} q-wm" role="img" aria-label="Quest">Quest<span class="q-wm-spark" aria-hidden="true">✦</span></span>`;
 const hills=c=>`<svg class="${c}" viewBox="0 0 400 140" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 70C60 30 110 40 170 62S300 50 400 20V140H0Z" fill="#dce8d5"/><path d="M0 95C70 60 130 80 200 88S330 70 400 52V140H0Z" fill="#c8dcc0"/><path d="M0 120C80 98 150 110 230 114S340 100 400 92V140H0Z" fill="#b3cfa9"/></svg>`;
 const ini=n=>String(n||'?').trim().charAt(0).toUpperCase();
 /* header logo */
@@ -40,7 +41,7 @@ const add=`<div class="idea-add"><input id="ideaquick" data-keep placeholder="Pa
 return h.replace('<div class="idea-stack">',add+'<div class="idea-stack">')}}
 {const _g=window.grp;window.grp=g=>{let h=_g(g);h=h.replace(/<div class="addrow"><input id="opt_[\s\S]*?<\/div>/,'').replace('<section class="linecard">',`<section class="linecard" data-gdrop="${g.id}">`);return h.replace('Nothing here yet. Paste a link or type a name below.','Nothing here yet. Add an idea above or drag one in.')}}
 window.optRow=o=>{const ed=U.edit&&U.edit.kind==='opt'&&U.edit.id===o.id,u=o.link&&url(o.link),votes=o.votes||{},mine=votes[A.me]||'',booked=o.status==='Booked',owner=!!(A.data&&A.data.trip&&A.data.trip.owner),
-allYes=A.people.length>1&&A.people.every(p=>votes[p.id]==='yes'),nm=u?lnk(u,o.name):esc(o.name),meta=[o.area&&'⌖ '+o.area,o.price&&'₩'+o.price].filter(Boolean).join(' · ');
+allYes=A.people.length>1&&A.people.every(p=>votes[p.id]==='yes'),nm=u?lnk(u,o.name):esc(o.name),meta=[o.area&&'📍 '+o.area,o.price&&'₩'+o.price].filter(Boolean).join(' · ');
 const chips=A.people.map(p=>{const v=votes[p.id]||'',t=`${esc(p.name)}: ${v||'not voted yet'}`;return owner&&p.id!==A.me?`<button type="button" class="pv ${v||'none'} settable" data-act="vote-other" data-id="${o.id}" data-person="${p.id}" title="${t} (tap to set)" aria-label="Set ${esc(p.name)}’s vote">${esc(ini(p.name))}</button>`:`<span class="pv ${v||'none'}" title="${t}">${esc(ini(p.name))}</span>`}).join('');
 const f=findOpt(o.id),gid=f?f.g.id:'';
 const edit=ed?`<div class="ef full idea-edit">${fld(o.id,'name','Name',o.name)}${fld(o.id,'link','Link',o.link,{type:'url',ph:'https://'})}<div class="two">${fld(o.id,'area','Area',o.area)}${fld(o.id,'price','Price per person',o.price)}</div>${fld(o.id,'notes','Notes',o.notes,{area:1})}<div class="two"><label class="inl"><span>Category</span><select id="e_${o.id}_group" data-keep>${D().groups.map(x=>`<option value="${x.id}" ${x.id===gid?'selected':''}>${esc(x.name)}</option>`).join('')}</select></label><label class="inl"><span>Status</span><select id="e_${o.id}_status" data-keep>${['Considering','To book','Booked'].map(s=>`<option ${o.status===s?'selected':''}>${s}</option>`).join('')}</select></label></div><div class="ef-actions"><button type="button" class="primary" data-act="idea-save" data-id="${o.id}">Save changes</button><button type="button" class="ghost" data-act="cancel-edit">Cancel</button></div><div class="ef-actions idea-danger"><button type="button" class="small-btn" data-act="del-opt" data-id="${o.id}">Archive</button><button type="button" class="small-btn danger" data-act="idea-del" data-id="${o.id}">Delete</button></div></div>`:'';

@@ -13,7 +13,19 @@ function toMinor(s,c){s=String(s==null?'':s).replace(/[,\s]/g,'');if(!/^\d*\.?\d
 const toStr=(m,c)=>dec(c)?(m/100).toFixed(2).replace(/\.00$/,''):String(m);
 function cfgCur(){try{return window.__qst?window.__qst.cfg().cur:'PHP'}catch(e){return 'PHP'}}
 function getBudget(){try{const o=JSON.parse((D().details||{}).budget||'null');return o&&CURS[o.cur]&&o.amt>0?o:null}catch(e){return null}}
+/* Group total: every expense counted once at its full amount, whoever paid it. This is
+   deliberately NOT scoped to the current person — a 330,000 dinner one person paid for
+   the whole group is 330,000 of group spend, even though that payer is only "out" their
+   own share (everyone else owes the rest back). See mySpendMinor() below for that other,
+   per-person number, which the panel shows alongside this one so the two can't be confused. */
 function spentMinor(cur){const Q=window.__qst;if(!Q)return 0;return Q.ST.rows.filter(r=>r.kind==='expense'&&r.currency===cur).reduce((a,r)=>a+r.amount_minor,0)}
+/* My actual share of the group spend: sum of my slice of every expense (not what I fronted,
+   not my net balance) — i.e. what this trip actually costs me once everyone settles up. */
+function mySpendMinor(cur){const Q=window.__qst;if(!Q||!A.me)return 0;
+ return Q.ST.rows.filter(r=>r.kind==='expense'&&r.currency===cur).reduce((a,r)=>{const sh=r.shares||{};
+  if(Object.prototype.hasOwnProperty.call(sh,A.me))return a+sh[A.me];
+  /* no explicit shares recorded (older row) and nobody else listed either: treat as all-mine */
+  return Object.keys(sh).length?a:a+r.amount_minor},0)}
 function otherCurSpent(cur){const Q=window.__qst;if(!Q)return false;return Q.ST.rows.some(r=>r.kind==='expense'&&r.currency!==cur)}
 
 let E=null; /* {amt,cur,err} while the small set/edit form is open */
@@ -26,17 +38,21 @@ function panelHtml(){
   ${E.err?`<div class="qbud-err">${esc(E.err)}</div>`:''}
   <div class="qst-foot"><button type="button" class="qst-pri" data-qbud="save">Save</button><button type="button" class="qst-sec" data-qbud="cancel">Cancel</button>${b?`<button type="button" class="qst-sec" data-qbud="clear">Remove</button>`:''}</div></section>`;
  }
- if(!b)return `<section class="panel qst-card qbud"><h3>Trip budget</h3><p class="qst-none">Add a budget and Quest will show how close you are.</p><button type="button" class="qst-ghost" data-qbud="open">＋ Set a trip budget</button></section>`;
+ /* unset: a single small text link, not a card — stays out of the way until wanted */
+ if(!b)return `<button type="button" class="qbud-mini" data-qbud="open">＋ Set a trip budget</button>`;
  const spent=spentMinor(b.cur),pct=b.amt>0?spent/b.amt:0,left=b.amt-spent;
  const cls=pct>=1?'over':pct>=0.8?'near':'fine';
+ const mine=mySpendMinor(b.cur);
  const note=otherCurSpent(b.cur)?`<small class="qbud-note">Only ${esc(b.cur)} expenses are counted.</small>`:'';
- return `<section class="panel qst-card qbud ${cls}"><div class="qst-ch"><h3>Trip budget</h3><button type="button" class="qst-dt" data-qbud="open">edit</button></div>
+ /* set: a slim strip below the balances, not a lead card — group total first (what the
+    budget tracks), your own share right under it in smaller text so the two can't be mixed up */
+ return `<section class="qbud-strip ${cls}"><div class="qbud-top"><span class="qbud-amt">${money(spent,b.cur)}</span><span class="qbud-of">of ${money(b.amt,b.cur)} group budget</span><button type="button" class="qst-dt" data-qbud="open">edit</button></div>
  <div class="qbud-bar"><div class="qbud-fill" style="width:${Math.min(100,Math.round(pct*100))}%"></div></div>
- <div class="qbud-line"><b>${money(spent,b.cur)}</b> of ${money(b.amt,b.cur)} spent · ${left>=0?money(left,b.cur)+' left':money(-left,b.cur)+' over'}</div>${note}</section>`;
+ <div class="qbud-line">${left>=0?money(left,b.cur)+' left':money(-left,b.cur)+' over'} · your share so far <b>${money(mine,b.cur)}</b></div>${note}</section>`;
 }
 {const _b=window.bill;if(typeof _b==='function')window.bill=function(){const h=_b.apply(this,arguments);if(typeof h!=='string'||U.tab!=='bill')return h;
- const anchor='<section class="panel qst-card"><div class="qst-ch"><h3>Balances</h3>';
- return h.includes(anchor)?h.replace(anchor,panelHtml()+anchor):panelHtml()+h}}
+ const anchor='<section class="panel qst-card"><h3>History</h3>';
+ return h.includes(anchor)?h.replace(anchor,panelHtml()+anchor):h+panelHtml()}}
 async function saveBudget(o){
  const v=o?JSON.stringify(o):'';
  try{if(A.client&&A.tripId){const q=await A.client.rpc('quest_set_detail',{p_trip:A.tripId,p_key:'budget',p_value:v});if(q&&q.error)throw q.error}
