@@ -12,7 +12,7 @@ css.textContent='#q43dd{margin:8px 0 4px;background:#FBF8F0;border:1px solid #D9
 +'#q43dd button:last-child{border-bottom:0}#q43dd button:hover,#q43dd button:focus-visible{background:#F1EDDD;outline:0}'
 +'#q43dd b{display:block;font-weight:600}#q43dd span{display:block;font-size:.82em;opacity:.7;margin-top:1px}'
 +'#q43dd .q43n{padding:9px 14px;font-size:.82em;color:#6B7A72;border-bottom:1px solid #EEE9DA}#q43dd .q43s b{font-weight:500}'
-+'.sl-tags .q43pin{font-size:12.5px;font-weight:600;color:#2F6F4A;text-decoration:none;white-space:nowrap;cursor:pointer}.sl-tags .q43pin:not(:first-child):before,.sl-tags .q44ln:not(:first-child):before{content:"·";margin-right:6px;color:#b4bdb6;font-weight:400}';
++'.sl-tags .q44ln:not(:first-child):before{content:"·";margin-right:6px;color:#b4bdb6;font-weight:400}';
 document.head.appendChild(css);
 const D_=()=>{try{return D()}catch(e){return null}};
 let cur='shortquick';const IDS={shortquick:1,quick:1};
@@ -113,9 +113,11 @@ const b=e.target.closest&&e.target.closest('#q43dd [data-q43]');
 if(b){e.stopPropagation();e.preventDefault();if(b.dataset.q43==='pick')pick(+b.dataset.n);else textSearch();return}
 if(!(e.target.closest&&(e.target.closest('#q43dd')||IDS[e.target.id]||e.target.closest('.quickline')||e.target.closest('.q43frow'))))close()},true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')close();if(e.key==='Enter'&&e.target&&IDS[e.target.id]){clearTimeout(timer);seq++;close()}},true);
-function badges(){try{const L=D_();if(!L)return;const by={};L.shortlist.forEach(x=>{if(x.lat!=null&&x.lng!=null)by[x.id]=x.maps_url||1});
-document.querySelectorAll('.sl-row').forEach(r=>{const b=r.querySelector('[data-id]');const t=r.querySelector('.sl-tags');if(!b||!t||!by[b.dataset.id]||t.querySelector('.q43pin'))return;
-const u=by[b.dataset.id],s=document.createElement(typeof u==='string'?'a':'span');s.className='q43pin';s.textContent='📍 Pinned';if(typeof u==='string'&&/^https:\/\//.test(u)){s.href=u;s.target='_blank';s.rel='noopener'}t.appendChild(s)})}catch(e){}}
+/* badges() used to stamp a second "📍 Pinned" marker onto every idea that already had a place —
+   right next to v44's own "📍 <address>" button, which does the exact same thing (opens the
+   same place editor) with a clearer label. Two pins that both opened the same popup was never
+   an intentional "edit vs map" split, just leftover duplication — so this no longer adds one. */
+function badges(){}
 const _r=window.render;if(typeof _r==='function')window.render=function(){const v=_r.apply(this,arguments);if(!inp())close();else if(S.items.length||S.note)paint();noAuto();showFind();badges();return v};
 window.__q43={call:call,ctx:ctx};
 })();
