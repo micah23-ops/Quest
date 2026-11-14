@@ -7,7 +7,7 @@ const ini=n=>String(n||'?').trim().charAt(0).toUpperCase();
 /* header logo */
 {const _h=window.header;window.header=()=>_h().replace(/<img class="mlogo"[^>]*>/,wm('mlogo'))}
 /* auth + trips */
-{const _a=window.authScreen;window.authScreen=()=>{const hero=`<div class="auth-hero">${wm('q-word big')}<div class="q-tag">Plan · Explore · Together</div><img class="q-owl" src="art/qt_suitcase.webp" alt="" width="240" height="232"></div>`;return _a().replace('<div class="shell narrow">','<div class="shell narrow auth-page">'+hero).replace('<div class="brand">QUEST</div>','')+hills('page-hills')}}
+{const _a=window.authScreen;window.authScreen=()=>{const hero=`<div class="auth-hero">${wm('q-word big')}<div class="q-tag">Plan · Explore · Together</div></div>`;return _a().replace('<div class="shell narrow">','<div class="shell narrow auth-page">'+hero).replace('<div class="brand">QUEST</div>','')+hills('page-hills')}}
 {const _t=window.tripsScreen;window.tripsScreen=()=>_t().replace('<div class="brand">QUEST</div>',wm('q-word'))+hills('page-hills')}
 /* macro categories for the shortlist */
 const CATS=['Food','Cafes','Sights','Shopping','Experience','Nightlife','Other'];if(typeof categories!=='undefined')categories.splice(0,categories.length,...CATS);
