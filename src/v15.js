@@ -1,8 +1,11 @@
 /* v15: brand assets, auth/trips screens, idea-lab cards, owner-set votes, macro categories, shortlist top bar */
 (()=>{
-/* the traced quest-wordmark-forest.svg asset is missing the counter-hole subpath for
-   "e" (it renders as a solid blob), so the wordmark is drawn as styled text instead. */
-const wm=c=>`<span class="${c} q-wm" role="img" aria-label="Quest">Quest<span class="q-wm-spark" aria-hidden="true">✦</span></span>`;
+/* quest-wordmark-forest.svg (auto-traced from the brand board) is missing the counter-hole
+   for "e", so it renders as a solid blob. The .png in the same official asset drop is a
+   flat render of the real artwork (not an auto-trace), so it doesn't have that problem —
+   use that instead of either the broken SVG or a stand-in text treatment. */
+const WM='brand/quest-wordmark-forest.png';
+const wm=c=>`<img class="${c} q-wm" src="${WM}" alt="Quest" width="2400" height="885">`;
 const hills=c=>`<svg class="${c}" viewBox="0 0 400 140" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 70C60 30 110 40 170 62S300 50 400 20V140H0Z" fill="#dce8d5"/><path d="M0 95C70 60 130 80 200 88S330 70 400 52V140H0Z" fill="#c8dcc0"/><path d="M0 120C80 98 150 110 230 114S340 100 400 92V140H0Z" fill="#b3cfa9"/></svg>`;
 const ini=n=>String(n||'?').trim().charAt(0).toUpperCase();
 /* header logo */

@@ -109,5 +109,14 @@ function decorate(){const root=document.getElementById('root');if(!root)return;
 document.addEventListener('click',async e=>{const b=e.target.closest&&e.target.closest('[data-act="offline-remove"]');if(!b)return;e.stopImmediatePropagation();e.preventDefault();
  if(!confirm('Remove the offline copy from this device? It will save again the next time you open a trip.'))return;await wipeAll();toast('Offline copy removed');setTimeout(()=>{blockUntil=0;if(A.user){R.uid=A.user.id}},4200);render()},true);
 /* ---------- app shell for offline loads ---------- */
-if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').catch(()=>{})})}
+/* app shell updates (new code pushed under this same URL) used to sit there until someone
+   happened to fully close and reopen the installed app — on a phone that can be days away,
+   so a just-shipped fix looked like it "didn't take". Reload once the new worker takes over,
+   and check for an update whenever the app comes back to the foreground, not just on cold load. */
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+ let reloading=false;
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloading)return;reloading=true;location.reload()});
+ window.addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').then(reg=>{
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)try{reg.update()}catch(e){}})
+ }).catch(()=>{})})}
 })();

@@ -33,26 +33,26 @@ function panelHtml(){
  const b=getBudget();
  if(E){
   const cs=CUR_LIST.map(k=>`<option${k===E.cur?' selected':''}>${k}</option>`).join('');
-  return `<section class="panel qst-card qbud-edit"><h3>Trip budget</h3>
-  <div class="qbud-row"><select class="qst-sel" data-qbud="cur">${cs}</select><input class="qst-in" data-qbud="amt" inputmode="decimal" placeholder="e.g. 50000" value="${esc(E.amt)}" aria-label="Budget amount" autocomplete="off"></div>
+  return `<div class="qbud-edit">
+  <div class="qbud-row"><select class="qst-sel" data-qbud="cur">${cs}</select><input class="qst-in" data-qbud="amt" inputmode="decimal" placeholder="Trip budget, e.g. 50000" value="${esc(E.amt)}" aria-label="Budget amount" autocomplete="off"></div>
   ${E.err?`<div class="qbud-err">${esc(E.err)}</div>`:''}
-  <div class="qst-foot"><button type="button" class="qst-pri" data-qbud="save">Save</button><button type="button" class="qst-sec" data-qbud="cancel">Cancel</button>${b?`<button type="button" class="qst-sec" data-qbud="clear">Remove</button>`:''}</div></section>`;
+  <div class="qst-foot"><button type="button" class="qst-pri" data-qbud="save">Save</button><button type="button" class="qst-sec" data-qbud="cancel">Cancel</button>${b?`<button type="button" class="qst-sec" data-qbud="clear">Remove</button>`:''}</div></div>`;
  }
  /* unset: a single small text link, not a card — stays out of the way until wanted */
  if(!b)return `<button type="button" class="qbud-mini" data-qbud="open">＋ Set a trip budget</button>`;
- const spent=spentMinor(b.cur),pct=b.amt>0?spent/b.amt:0,left=b.amt-spent;
+ const spent=spentMinor(b.cur),pct=b.amt>0?spent/b.amt:0;
  const cls=pct>=1?'over':pct>=0.8?'near':'fine';
- const mine=mySpendMinor(b.cur);
  const note=otherCurSpent(b.cur)?`<small class="qbud-note">Only ${esc(b.cur)} expenses are counted.</small>`:'';
- /* set: a slim strip below the balances, not a lead card — group total first (what the
-    budget tracks), your own share right under it in smaller text so the two can't be mixed up */
- return `<section class="qbud-strip ${cls}"><div class="qbud-top"><span class="qbud-amt">${money(spent,b.cur)}</span><span class="qbud-of">of ${money(b.amt,b.cur)} group budget</span><button type="button" class="qst-dt" data-qbud="open">edit</button></div>
- <div class="qbud-bar"><div class="qbud-fill" style="width:${Math.min(100,Math.round(pct*100))}%"></div></div>
- <div class="qbud-line">${left>=0?money(left,b.cur)+' left':money(-left,b.cur)+' over'} · your share so far <b>${money(mine,b.cur)}</b></div>${note}</section>`;
+ /* set: one line folded right into the balance card — "Budget X of Y spent", then the bar.
+    No separate card, no extra stats; tap the line to edit. */
+ return `<div class="qbud-line ${cls}" data-qbud="open" role="button" tabindex="0"><b>Budget</b> ${money(spent,b.cur)} of ${money(b.amt,b.cur)} spent
+ <div class="qbud-bar"><div class="qbud-fill" style="width:${Math.min(100,Math.round(pct*100))}%"></div></div>${note}</div>`;
 }
 {const _b=window.bill;if(typeof _b==='function')window.bill=function(){const h=_b.apply(this,arguments);if(typeof h!=='string'||U.tab!=='bill')return h;
- const anchor='<section class="panel qst-card"><h3>History</h3>';
- return h.includes(anchor)?h.replace(anchor,panelHtml()+anchor):h+panelHtml()}}
+ /* folds into the first panel (Balances), right above its closing tag, instead of its own
+    lead card or a strip between sections */
+ const i=h.indexOf('</section>');
+ return i<0?h+panelHtml():h.slice(0,i)+panelHtml()+h.slice(i)}}
 async function saveBudget(o){
  const v=o?JSON.stringify(o):'';
  try{if(A.client&&A.tripId){const q=await A.client.rpc('quest_set_detail',{p_trip:A.tripId,p_key:'budget',p_value:v});if(q&&q.error)throw q.error}

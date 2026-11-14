@@ -82,6 +82,11 @@ async function gsync(){const h=host;if(!M.g||!h)return;const hold=h.querySelecto
  M.fit=false}
 /* ---------- day planner: travel times + stops panel ---------- */
 const TR={},PEND={};let TRS={};try{TRS=JSON.parse(localStorage.getItem('q46tr')||'{}')}catch(e){}
+/* per-leg "I'd rather walk/take the train/drive this one" override — people know the route
+   better than a distance formula does, so let them override the computed mode directly
+   instead of only ever seeing what the algorithm picked. */
+let LEGOV={};try{LEGOV=JSON.parse(localStorage.getItem('q46lego')||'{}')}catch(e){}
+const saveLegOv=()=>{try{localStorage.setItem('q46lego',JSON.stringify(LEGOV))}catch(e){}};
 const hav=(a,b)=>{const R=6371e3,t=x=>x*PI/180,dl=t(b.lat-a.lat),dg=t(b.lng-a.lng),h=Math.sin(dl/2)**2+Math.cos(t(a.lat))*Math.cos(t(b.lat))*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
 const lk=(a,b)=>(+a.lat).toFixed(5)+','+(+a.lng).toFixed(5)+'>'+(+b.lat).toFixed(5)+','+(+b.lng).toFixed(5);
 const estLeg=(a,b)=>{const d=hav(a,b);return d<1200?{s:Math.round(d*1.3/1.25),m:d,est:1,k:'walk'}:{s:Math.round(d*1.4/7+300),m:d,est:1,k:'car'}};
@@ -91,7 +96,13 @@ function fmt(sec){const m=Math.max(1,Math.round(sec/60));return m<60?m+' min':Ma
 const korea=p=>p&&p.lat>=33&&p.lat<=39&&p.lng>=124&&p.lng<=132;
 function curStops(){return M.rt?routeStops():dayStops()}
 function dayStops(){const L=D_();if(!L||M.day==='all')return[];return(L.plans||[]).filter(p=>p.date===M.day).sort((a,b)=>stampOf(a)-stampOf(b))}
-function legOf(a,b){const k=lk(a,b);if(TR[k]&&!(TR[k].retry&&Date.now()-TR[k].t>60000))return TR[k];if(TRS[k])return TRS[k];if(hav(a,b)<1200)return TR[k]=estLeg(a,b);return null}
+function legOf(a,b){const k=lk(a,b);
+ const ov=LEGOV[k];
+ if(ov){if(ov==='transit'&&TRS[k]&&TRS[k].k==='transit')return TRS[k];const d=hav(a,b);
+  if(ov==='walk')return{s:Math.round(d*1.3/1.25),m:d,est:1,k:'walk',ov:1};
+  if(ov==='car')return{s:Math.round(d*1.4/7+300),m:d,est:1,k:'car',ov:1};
+  return{s:Math.round(d*1.4/7+300),m:d,est:1,k:'transit',ov:1}}
+ if(TR[k]&&!(TR[k].retry&&Date.now()-TR[k].t>60000))return TR[k];if(TRS[k])return TRS[k];if(hav(a,b)<1200)return TR[k]=estLeg(a,b);return null}
 async function callR(body){const c=(typeof A!=='undefined'&&A)?A.client:null;if(!c||!c.functions)return{error:'offline'};
  try{const r=await c.functions.invoke('quest-route',{body});if(r.error){const x=r.error.context;if(x&&x.json){try{return await x.json()}catch(e){}}return{error:'network'}}return r.data||{}}catch(e){return{error:'network'}}}
 async function loadLegs(){const pin=curStops().filter(ok);const need=[];
@@ -105,12 +116,15 @@ async function loadLegs(){const pin=curStops().filter(ok);const need=[];
  upd()}
 function upd(){const el=document.querySelector('.q47');if(el)el.innerHTML=panelInner()}
 const dlong=d=>{try{return new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',day:'numeric',month:'short'})}catch(e){return d}};
+const LEGMODES=[['walk','🚶','Walk'],['transit','🚆','Train or bus'],['car','🚕','Car']];
 function legHtml(a,b){const t=legOf(a,b),k=lk(a,b);
  const mode=t&&t.k==='walk'?'walking':'transit';
  const href='https://www.google.com/maps/dir/?api=1&origin='+a.lat+','+a.lng+'&destination='+b.lat+','+b.lng+'&travelmode='+mode;
  let txt;if(!t)txt='<span class="q47dim">'+(PEND[k]?'Working out travel time…':'Travel time')+'</span>';
  else txt=(t.k==='walk'?'🚶':t.k==='car'?'🚕':'🚆')+' '+(t.est?'about ':'')+fmt(t.s)+(t.k==='transit'?' · train or bus':t.k==='walk'?' walk':' by car');
- return`<div class="q47leg"><span>${txt}</span><a href="${esc(href)}" target="_blank" rel="noopener">Directions ↗</a></div>`}
+ let h=`<div class="q47leg"><button type="button" class="q47legtxt" data-q46="legmode" data-k="${esc(k)}">${txt}<i>▾</i></button><a href="${esc(href)}" target="_blank" rel="noopener">Directions ↗</a></div>`;
+ if(M.legSel===k)h+=`<div class="q47legopts">`+LEGMODES.map(([m,ic,lab])=>`<button type="button" class="q47legopt${t&&t.k===m?' on':''}" data-q46="legset" data-k="${esc(k)}" data-m="${m}">${ic} ${lab}</button>`).join('')+`</div>`;
+ return h}
 function startSet(k){M.st=null;M.pf=null;
  if(M.rt)M.picks=M.picks.filter(x=>x!==M.startKey&&x!==k);else{M.picks=dayStops().filter(ok).map(p=>'plan:'+p.id)}
  M.picks.unshift(k);M.startKey=k;M.rt=true;M.fall={};M.menu=null;M.more=false;M.sel=null;M.swap=null;M.save=false;M.fit=true;U.tab='map';render();pickBar();try{toast('Starting from '+((find(k)||{}).name||'there'))}catch(e){}}
@@ -221,7 +235,7 @@ function stopsHtml(list,isRoute){let h='',n=0;
  list.forEach((p,i)=>{const pn=ok(p);if(pn)n++;const key=(p._k||'plan')+':'+p.id,sel=M.sel===key;
   const tm=isRoute?[key===M.startKey?'Start':'',p.area,p._k==='plan'?'in itinerary':p._k==='stay'?'where you’re staying':''].filter(Boolean).join(' · '):[p.start&&p.end?p.start+'–'+p.end:p.start,p.area].filter(Boolean).join(' · ');
   const act=pn?` data-q46="row" data-k="${esc(key)}"`:'';
-  h+=`<div class="q47r${pn?'':' np'}${sel?' sel':''}" data-ri="${i}"><span class="q47h2" data-q47drag="${i}" title="Drag to reorder" aria-label="Drag to reorder">≡</span><span class="q47n"${act}>${pn?n:'·'}</span><div class="q47m"${act}><b>${esc(p.name||'Untitled')}</b><small>${esc(tm||'')}${pn?'':(tm?' · ':'')+'not on the map yet'}</small></div>${pn?'':`<button type="button" class="q47pinb" data-q46="pf" data-k="${esc(key)}">Find on map</button>`}<button type="button" class="q47i" data-q46="menu" data-i="${i}" aria-label="More">⋯</button></div>`;
+  h+=`<div class="q47r${pn?'':' np'}${sel?' sel':''}" data-ri="${i}"><span class="q47h2" data-q47drag="${i}" title="Drag to reorder" aria-label="Drag to reorder">≡</span><span class="q47n"${act}>${pn?n:'·'}</span><div class="q47m"${act}><b>${esc(p.name||'Untitled')}</b><small>${esc(tm||'')}${pn?'':(tm?' · ':'')+'no place pinned yet'}</small></div>${pn?'':`<button type="button" class="q47pinb" data-q46="pf" data-k="${esc(key)}">Find on map</button>`}<button type="button" class="q47i" data-q46="menu" data-i="${i}" aria-label="More">⋯</button></div>`;
   if(M.menu===i){h+=`<div class="q47menu"><button type="button" data-q46="rtswap" data-i="${i}">⇄ Swap with another idea</button><button type="button" data-q46="rtrm" data-i="${i}">✕ Remove from ${isRoute?'route':'this day'}</button></div>`;if(M.swap===i)h+=candHtml(list)}
   if(pn){const nx=list.slice(i+1).find(ok);if(nx)h+=legHtml(p,nx)}});
  return h}
@@ -373,6 +387,8 @@ document.addEventListener('click',e=>{
   try{toast('Added to '+dlab(date))}catch(x){}}
  else if(a==='goplan'){const p=find(M.sel);if(!p)return;U.tab='trip';U.date=p.date||U.date;U.open=U.open||{};U.open[p.id]=true;render()}
  else if(a==='goidea'){const p=find(M.sel);if(!p)return;U.tab='shortlist';render();setTimeout(()=>{const el=document.querySelector('.sl-row [data-id="'+p.id+'"]');if(el){const r=el.closest('.sl-row')||el;r.scrollIntoView({block:'center'});r.classList.add('q46flash');setTimeout(()=>r.classList.remove('q46flash'),1600)}},80)}
+ else if(a==='legmode'){M.legSel=M.legSel===b.dataset.k?null:b.dataset.k;upd()}
+ else if(a==='legset'){const k=b.dataset.k,m=b.dataset.m;if(TR[k])delete TR[k];LEGOV[k]=m;saveLegOv();M.legSel=null;upd()}
 },true);
 /* ---------- sample trip (Tokyo) for trying the planner ---------- */
 const SAMPLE={plans:[
