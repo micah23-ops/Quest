@@ -53,14 +53,14 @@ const _r=window.render;
 if(typeof _r==='function')window.render=function(){const v=_r.apply(this,arguments);try{document.querySelectorAll('.q47pick').forEach(x=>x.remove());igFor(D_());sync();deco()}catch(e){console.error(e)}return v};
 
 /* ---------- v49: ideas distances + pin icon + legend, Plan my days on the Map ---------- */
-const PI=Math.PI;let NEAR=null,NEARON=false,NEARREQ=false;
-/* used to need a manual "Near me" tap before any idea would show a distance from you — but the
-   whole point was for ideas to show how far they are from wherever you are, automatically, same
-   as "from hotel" already does with no tap required. Ask for location once, quietly, the first
-   time Ideas has something to show it on; if it's denied there's just no "from me" line, same
-   as today, nothing blocks the rest of the page. */
-function tryNear(){if(NEARREQ||NEARON)return;NEARREQ=true;if(!navigator.geolocation)return;
- navigator.geolocation.getCurrentPosition(p=>{NEAR={lat:p.coords.latitude,lng:p.coords.longitude};NEARON=true;deco()},()=>{},{enableHighAccuracy:false,timeout:10000,maximumAge:120000})}
+const PI=Math.PI;let NEAR=null,NEARON=false,NEARWATCHING=false;
+/* used to need a manual "Near me" tap, and even then only took one snapshot of where you were —
+   so if you walked somewhere else, "from me" quietly went stale. Watches your position instead
+   of reading it once, so it keeps updating as you move, the same way a map app would. Starts
+   quietly the first time Ideas has something to show it on; if it's denied there's just no
+   "from me" line, same as before, nothing else on the page is affected. */
+function tryNear(){if(NEARWATCHING||!navigator.geolocation)return;NEARWATCHING=true;
+ navigator.geolocation.watchPosition(p=>{NEAR={lat:p.coords.latitude,lng:p.coords.longitude};NEARON=true;deco()},()=>{},{enableHighAccuracy:false,timeout:15000,maximumAge:60000})}
 const hv=(a,b)=>{const R=6371e3,t=x=>x*PI/180,dl=t(b.lat-a.lat),dg=t(b.lng-a.lng),h=Math.sin(dl/2)**2+Math.cos(t(a.lat))*Math.cos(t(b.lat))*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
 const okp=x=>x&&x.lat!=null&&x.lng!=null&&x.lat!==''&&x.lng!==''&&isFinite(x.lat)&&isFinite(x.lng);
 const kmf=d=>d<950?Math.max(50,Math.round(d/50)*50)+' m':(d/1000).toFixed(1)+' km';
