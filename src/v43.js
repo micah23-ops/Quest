@@ -12,7 +12,7 @@ css.textContent='#q43dd{margin:8px 0 4px;background:#FBF8F0;border:1px solid #D9
 +'#q43dd button:last-child{border-bottom:0}#q43dd button:hover,#q43dd button:focus-visible{background:#F1EDDD;outline:0}'
 +'#q43dd b{display:block;font-weight:600}#q43dd span{display:block;font-size:.82em;opacity:.7;margin-top:1px}'
 +'#q43dd .q43n{padding:9px 14px;font-size:.82em;color:#6B7A72;border-bottom:1px solid #EEE9DA}#q43dd .q43s b{font-weight:500}'
-+'.sl-tags .q43pin{font-size:12.5px;font-weight:600;color:#2F6F4A;text-decoration:none;white-space:nowrap;cursor:pointer}.sl-tags .q43pin:not(:first-child):before,.sl-tags .q44ln:not(:first-child):before{content:"\00b7";margin-right:6px;color:#b4bdb6;font-weight:400}';
++'.sl-tags .q43pin{font-size:12.5px;font-weight:600;color:#2F6F4A;text-decoration:none;white-space:nowrap;cursor:pointer}.sl-tags .q43pin:not(:first-child):before,.sl-tags .q44ln:not(:first-child):before{content:"·";margin-right:6px;color:#b4bdb6;font-weight:400}';
 document.head.appendChild(css);
 const D_=()=>{try{return D()}catch(e){return null}};
 let cur='shortquick';const IDS={shortquick:1,quick:1};
