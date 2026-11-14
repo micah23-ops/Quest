@@ -1,16 +1,14 @@
 /* v16: header landscapes, trip name, QT celebrations, owner sets shortlist taps */
 (()=>{
 const AR='art/',ini=n=>String(n||'?').trim().charAt(0).toUpperCase();
-/* no decorative art shipped with this build (art/ is empty) — skip the illustration
-   rather than render a broken image. */
-const land=()=>'';
+const land=(k,h)=>`<div class="land-wrap" aria-hidden="true"><img class="land land-${k}" src="${AR}land_${k}.webp" alt="" width="640" height="${h}"></div>`;
 /* header landscapes */
 {const _t=window.trip;window.trip=()=>{let h=_t();const t=A.data&&A.data.trip,nm=t&&(t.name||t.city);if(nm)h=h.replace('<h2 class="section-title">The itinerary</h2>',`<div class="trip-kicker">${esc(nm)}</div><h2 class="section-title">The itinerary</h2>`);return h.replace('<div class="trip-main">','<div class="trip-main">'+land('trip',96))}}
 {const _s=window.shortlist;window.shortlist=()=>land('short',136)+_s()}
 {const _p=window.planning;window.planning=()=>land('plan',137)+_p()}
-/* trips page: thumbnails (no art shipped, so always use the initials placeholder) */
-{const _t=window.tripsScreen;window.tripsScreen=()=>{let h=_t();
-h=h.replace(/(<button class="trip-card"[^>]*data-id="([^"]+)">)([\s\S]*?)(<\/button>)/g,(m,open,id,inner,close)=>{const t=(A.trips||[]).find(x=>x.id===id)||{};const th=`<span class="tc-img tc-ph" aria-hidden="true">${esc(ini(t.city||t.name))}</span>`;return open+th+'<span class="tc-txt">'+inner+'</span>'+close});return h}}
+/* trips page: scenic bottom + thumbnails */
+{const _t=window.tripsScreen;window.tripsScreen=()=>{let h=_t();h=h.replace(/<svg class="page-hills"[\s\S]*?<\/svg>/,`<img class="page-land" src="${AR}land_trip.webp" alt="" width="640" height="96">`);
+h=h.replace(/(<button class="trip-card"[^>]*data-id="([^"]+)">)([\s\S]*?)(<\/button>)/g,(m,open,id,inner,close)=>{const t=(A.trips||[]).find(x=>x.id===id)||{};const th=/seoul|korea/i.test((t.name||'')+' '+(t.city||''))?`<img class="tc-img" src="${AR}trip_korea.webp" alt="" width="240" height="180">`:`<span class="tc-img tc-ph" aria-hidden="true">${esc(ini(t.city||t.name))}</span>`;return open+th+'<span class="tc-txt">'+inner+'</span>'+close});return h}}
 /* trip creation: name first, then destination */
 {const _n=window.newScreen;window.newScreen=()=>{const h=_n(),m=/<div class="field"><label for="n_where">[\s\S]*?<\/div>/.exec(h),k=/<div class="field"><label for="n_name">[\s\S]*?<\/div>/.exec(h);if(!m||!k)return h;const nm=k[0].replace('Trip name (optional)','Name your trip');return h.replace(m[0]+k[0],nm+m[0])}}
 /* you are always first in your own view (colours stay tied to join order) */
@@ -18,11 +16,11 @@ h=h.replace(/(<button class="trip-card"[^>]*data-id="([^"]+)">)([\s\S]*?)(<\/but
 /* quick toasts */
 {const _t=window.toast;window.toast=s=>{_t(s);clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.add('hidden'),1000)}}
 {const _u=window.toastUndo;if(typeof _u==='function')window.toastUndo=function(){_u.apply(this,arguments);clearTimeout(toastT);toastT=setTimeout(()=>{toastEl.classList.add('hidden');toastEl.classList.remove('act')},2200)}}
-/* celebrations (no art shipped, so the toast is text-only) */
-const POP={book:"You're booked!",buddy:'Yay, quest buddies!',done:'Quest complete!'};
+/* celebrations */
+const POP={book:['qt_ticket.webp',"You're booked!",150,122],buddy:['qt_buddies.webp','Yay, quest buddies!',170,109],done:['qt_done.webp','Quest complete!',150,145]};
 let popT;
-function celebrate(k){const msg=POP[k];if(!msg)return;const o=document.getElementById('qtpop');if(o)o.remove();clearTimeout(popT);
-const d=document.createElement('div');d.id='qtpop';d.className='qtpop';d.setAttribute('role','status');d.innerHTML=`<b>${msg}</b>`;document.body.appendChild(d);popT=setTimeout(()=>d.remove(),2000)}
+function celebrate(k){const p=POP[k];if(!p)return;const o=document.getElementById('qtpop');if(o)o.remove();clearTimeout(popT);
+const d=document.createElement('div');d.id='qtpop';d.className='qtpop';d.setAttribute('role','status');d.innerHTML=`<img src="${AR}${p[0]}" alt="" width="${p[2]}" height="${p[3]}"><b>${p[1]}</b>`;document.body.appendChild(d);popT=setTimeout(()=>d.remove(),2000)}
 /* v11 already decides WHEN (done / join accepted); this swaps in the final art, text and 2s timing */
 window.celebrate=(art,msg)=>celebrate(art==='buddies'?'buddy':art);
 {const _s=window.saveSched;if(typeof _s==='function')window.saveSched=function(){const s=U.sched,n=D().plans.length,fromShort=!!s;const r=_s.apply(this,arguments);if(fromShort&&D().plans.length>n)celebrate('book');return r}}
