@@ -53,7 +53,14 @@ const _r=window.render;
 if(typeof _r==='function')window.render=function(){const v=_r.apply(this,arguments);try{document.querySelectorAll('.q47pick').forEach(x=>x.remove());igFor(D_());sync();deco()}catch(e){console.error(e)}return v};
 
 /* ---------- v49: ideas distances + pin icon + legend, Plan my days on the Map ---------- */
-const PI=Math.PI;let NEAR=null,NEARON=false;
+const PI=Math.PI;let NEAR=null,NEARON=false,NEARREQ=false;
+/* used to need a manual "Near me" tap before any idea would show a distance from you — but the
+   whole point was for ideas to show how far they are from wherever you are, automatically, same
+   as "from hotel" already does with no tap required. Ask for location once, quietly, the first
+   time Ideas has something to show it on; if it's denied there's just no "from me" line, same
+   as today, nothing blocks the rest of the page. */
+function tryNear(){if(NEARREQ||NEARON)return;NEARREQ=true;if(!navigator.geolocation)return;
+ navigator.geolocation.getCurrentPosition(p=>{NEAR={lat:p.coords.latitude,lng:p.coords.longitude};NEARON=true;deco()},()=>{},{enableHighAccuracy:false,timeout:10000,maximumAge:120000})}
 const hv=(a,b)=>{const R=6371e3,t=x=>x*PI/180,dl=t(b.lat-a.lat),dg=t(b.lng-a.lng),h=Math.sin(dl/2)**2+Math.cos(t(a.lat))*Math.cos(t(b.lat))*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
 const okp=x=>x&&x.lat!=null&&x.lng!=null&&x.lat!==''&&x.lng!==''&&isFinite(x.lat)&&isFinite(x.lng);
 const kmf=d=>d<950?Math.max(50,Math.round(d/50)*50)+' m':(d/1000).toFixed(1)+' km';
@@ -63,6 +70,7 @@ function deco(){
  const L=D_();if(!L)return;
  document.querySelectorAll('.q43pin').forEach(x=>{if(x.textContent!=='📍'){x.textContent='📍';x.title='On the map. Tap to see it or change the place.';x.setAttribute('aria-label','On the map')}x.removeAttribute('href');x.removeAttribute('target')});
  if(U.tab!=='shortlist')return;
+ if(document.querySelector('.sl-row'))tryNear();
  const hs=hotels();
  document.querySelectorAll('.sl-row').forEach(r=>{const c=r.querySelector('.check-done');const id=c&&c.dataset.id;const it=id&&(L.shortlist||[]).find(x=>x.id===id);if(!it)return;
   const tg=r.querySelector('.sl-tags'),body=r.querySelector('.sl-body');
@@ -77,7 +85,7 @@ function deco(){
  const list=document.querySelector('.short-list');
  let leg=document.querySelector('.q49leg');let off=false;try{off=localStorage.getItem('q49leg')==='0'}catch(e){}
  if(list&&!off&&document.querySelector('.sl-row')){if(!leg){leg=document.createElement('div');leg.className='q49leg';list.insertBefore(leg,list.firstChild)}
-  const h='<span>📍 on the map · tap an address to see it</span><button type="button" data-q49="near" class="'+(NEARON?'on':'')+'">'+(NEARON?'Distance from me: on':'Distance from me')+'</button><button type="button" class="lx" data-q49="legx" aria-label="Hide">✕</button>';
+  const h='<span>📍 on the map · tap an address to see it</span><button type="button" class="lx" data-q49="legx" aria-label="Hide">✕</button>';
   if(leg.dataset.h!==h){leg.innerHTML=h;leg.dataset.h=h}}
  else if(leg&&off)leg.remove()}
 function goMap(id,link){const Q=window.__q46;if(!Q)return;const M=Q.M;M.rt=false;M.pf=null;M.ideas=true;M.fit=true;M.sel=link?null:'idea:'+id;U.tab='map';render();
