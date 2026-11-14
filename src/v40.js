@@ -45,6 +45,13 @@ let E=null,PK=null;
 function host(){let h=document.getElementById('q40');if(!h){h=document.createElement('div');h.id='q40';document.body.appendChild(h);wire(h)}return h}
 function closeAll(){E=null;PK=null;const h=document.getElementById('q40');if(h)h.remove()}
 const planOf=id=>D().plans.find(p=>p.id===id);
+/* move a scheduled item back off the itinerary and into Ideas (undoable) */
+function toIdea(id){const d=D(),i=d.plans.findIndex(x=>x.id===id);if(i<0)return;
+ const p=d.plans[i];
+ const item={id:uuid(),name:p.name,area:p.area||'',category:(window.__q28&&window.__q28.catOf?window.__q28.catOf(p.name):'Other'),place:p.place||'',link:p.link||'',notes:p.notes||'',done:false,favorite:false,interest:[]};
+ closeAll();
+ mut(()=>{d.plans.splice(i,1);d.shortlist=d.shortlist||[];d.shortlist.unshift(item)});
+ toastUndo('Moved to Ideas',()=>mut(()=>{const d2=D(),k=d2.shortlist.findIndex(x=>x.id===item.id);if(k>=0)d2.shortlist.splice(k,1);d2.plans.splice(Math.min(i,d2.plans.length),0,p)}))}
 function whenTxt(p){const d=(function(){try{return displayDate(p.date)}catch(e){return p.date}})();const t=p.start?(p.end?fmt(st(p))+'–'+fmt(stamp(p.end)):fmt(st(p))):'Anytime';return d+' · '+t}
 function whoTxt(p){return isAllP(p)?'Everyone':p.who.map(id=>first(pName(id))).join(' + ')}
 
@@ -56,7 +63,7 @@ function paintPeek(){const p=planOf(PK);if(!p){closeAll();return}
  h.innerHTML=`<div class="q40-back" data-q40="close"></div><div class="q40-sheet" role="dialog" aria-label="${esc(p.name)}"><div class="q40-top"><strong>${esc(p.name)}</strong><button type="button" class="q40-x" data-q40="close" aria-label="Close">✕</button></div>
  <div class="q40-meta"><span>${esc(whenTxt(p))}</span><span>${esc(whoTxt(p))}</span>${p.place||p.area?`<span>⌌ ${esc([p.place,p.area].filter(Boolean).join(' · '))}</span>`:''}${pr?`<span><b>${esc(pr)}</b></span>`:''}${lk}</div>
  ${p.notes?`<p class="q40-notes">${esc(p.notes)}</p>`:''}
- <div class="q40-foot">${logged?`<button type="button" class="q40-sec" data-q40="exp" data-id="${p.id}">✓ Expense logged · view</button>`:`<button type="button" class="q40-pri" data-q40="exp" data-id="${p.id}">＋ Add as expense</button>`}<button type="button" class="q40-sec" data-q40="edit" data-id="${p.id}">Edit details</button><button type="button" class="q40-sec warn" data-q40="del" data-id="${p.id}">Delete</button></div></div>`}
+ <div class="q40-foot">${logged?`<button type="button" class="q40-sec" data-q40="exp" data-id="${p.id}">✓ Expense logged · view</button>`:`<button type="button" class="q40-pri" data-q40="exp" data-id="${p.id}">＋ Add as expense</button>`}<button type="button" class="q40-sec" data-q40="edit" data-id="${p.id}">Edit details</button><button type="button" class="q40-sec" data-q40="toidea" data-id="${p.id}">↩ To Ideas</button><button type="button" class="q40-sec warn" data-q40="del" data-id="${p.id}">Delete</button></div></div>`}
 
 function openEdit(id){const p=planOf(id);if(!p)return;PK=null;
  const cur=curOf(p),all=isAllP(p);
@@ -81,7 +88,7 @@ function paintEdit(){const h=host(),keep=document.activeElement&&document.active
  ${f('link','Link',`<input class="q40-in" data-k="link" value="${esc(E.link)}" placeholder="https://" autocomplete="off">`)}
  <div class="q40-attwrap">${window.__att?window.__att.editor('plan',E.id):''}</div>`:''}
  <div class="q40-err">${esc(E.err)}</div>
- <div class="q40-foot"><button type="button" class="q40-pri" data-q40="save">Save</button><button type="button" class="q40-sec" data-q40="close">Cancel</button><button type="button" class="q40-sec warn" data-q40="del" data-id="${E.id}">Delete</button></div></div>`;
+ <div class="q40-foot"><button type="button" class="q40-pri" data-q40="save">Save</button><button type="button" class="q40-sec" data-q40="close">Cancel</button><button type="button" class="q40-sec" data-q40="toidea" data-id="${E.id}">↩ To Ideas</button><button type="button" class="q40-sec warn" data-q40="del" data-id="${E.id}">Delete</button></div></div>`;
  if(keep){const e=h.querySelector('[data-k="'+keep+'"]');if(e&&e.tagName!=='SELECT')e.focus({preventScroll:true})}}
 function saveEdit(){const p=planOf(E.id);if(!p){closeAll();return}
  if(!E.name.trim()){E.err='Add a name';paintEdit();return}
@@ -109,6 +116,7 @@ document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest
  if(a==='save'){saveEdit();return}
  if(a==='who'&&E){setWho(b.dataset.id);paintEdit();return}
  if(a==='more'&&E){E.more=!E.more;paintEdit();return}
+ if(a==='toidea'){toIdea(b.dataset.id);return}
  if(a==='del'){const id=b.dataset.id;closeAll();doDelete('plan',id);return}
  if(a==='exp'){const p=planOf(b.dataset.id);closeAll();if(p&&window.questLogExpense)window.questLogExpense(p);return}
 },true);
