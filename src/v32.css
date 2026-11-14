@@ -11,7 +11,7 @@
 .short-wrap .sl-body{flex:1;min-width:0;cursor:pointer}
 .short-wrap .sl-title{font-size:15.5px;line-height:1.25}
 .short-wrap .sl-tags{display:flex;gap:6px;flex-wrap:nowrap;overflow:hidden;margin-top:2px}
-.short-wrap:not(.q32-open) .sl-note,.short-wrap:not(.q32-open) .o3-acts,.short-wrap:not(.q32-open) .person-pick{display:none}
+.short-wrap:not(.q32-open) .sl-note,.short-wrap:not(.q32-open) .o3-acts,.short-wrap:not(.q32-open) .person-pick,.short-wrap:not(.q32-open) .q49d{display:none}
 .short-wrap.q32-open .o3-acts,.short-wrap.q32-open .person-pick{flex:0 0 auto}
 .short-wrap.q32-open .sl-row{padding-bottom:12px}
 /* readable secondary text */
