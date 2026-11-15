@@ -39,13 +39,22 @@
 .q47{margin-top:12px}
 .q47h{padding:2px 2px 8px}.q47t{font-weight:700;color:#2F4F46;font-size:16px}.q47s{font-size:13px;color:#6B7A72;margin-top:2px}
 .q47act{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 10px}
-.q47r{display:flex;gap:10px;align-items:center;padding:10px;border-radius:12px;background:#FBF8F0;border:1px solid #E4DFCE;min-height:56px}
+.q47r{display:flex;gap:8px;align-items:center;padding:8px 10px;border-radius:12px;background:#FBF8F0;border:1px solid #E4DFCE;min-height:48px;margin-bottom:6px}
 .q47r[data-q46]{cursor:pointer}.q47r.sel{border-color:#2F4F46;box-shadow:0 0 0 2px rgba(47,79,70,.15)}
-.q47n{flex:0 0 28px;height:28px;border-radius:50%;background:#2F4F46;color:#F7F3E9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+.q47n{flex:0 0 26px;height:26px;border-radius:50%;background:#2F4F46;color:#F7F3E9;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px}
 .q47r.np{opacity:.75}.q47r.np .q47n{background:#D9D3C2;color:#6B7A72}
-.q47m{min-width:0;flex:1}.q47m b{display:block;color:#2F4F46;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.q47m small{color:#6B7A72;font-size:12.5px}
-.q47leg{display:flex;align-items:center;gap:8px;margin:0 0 0 23px;padding:7px 0 7px 16px;border-left:2px dotted #B9C4B3;font-size:12.5px;color:#4a5a52}
-.q47leg a{margin-left:auto;color:#2F6F4A;font-weight:600;text-decoration:none;white-space:nowrap;padding:6px 4px}.q47dim{color:#8A968F}
+.q47m{min-width:0;flex:1}.q47m b{display:block;color:#2F4F46;font-size:14px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.q47m small{color:#6B7A72;font-size:12px;line-height:1.3}
+/* travel-leg row: a stop card's own margin-bottom already opens a gap before AND after this row
+   (the next card has no top margin of its own) — so the row needs almost no padding of its own,
+   just enough to keep the dotted connector line legible. Adding real padding on top of that
+   margin was what made the gap balloon around every leg; this keeps it to one consistent beat. */
+.q47leg{display:flex;align-items:center;gap:8px;margin:0 0 6px 23px;padding:2px 0 2px 16px;border-left:2px dotted #B9C4B3;font-size:12.5px;color:#4a5a52;min-height:0}
+.q47leg a{margin-left:auto;color:#2F6F4A;font-weight:600;text-decoration:none;white-space:nowrap;padding:4px}.q47dim{color:#8A968F}
+.q47legtxt{border:0;background:none;font:inherit;color:inherit;padding:4px 2px;cursor:pointer;display:inline-flex;align-items:center;gap:3px}
+.q47legtxt i{font-style:normal;font-size:10px;color:#8A968F}
+.q47legopts{display:flex;gap:6px;margin:2px 0 6px 39px;flex-wrap:wrap}
+.q47legopt{border:1px solid #CFC8B2;background:#FBF8F0;color:#2F4F46;border-radius:999px;padding:5px 11px;font:inherit;font-size:12px;font-weight:600;cursor:pointer;min-height:30px}
+.q47legopt.on{background:#2F4F46;color:#F7F3E9;border-color:#2F4F46}
 .q47day{display:flex;justify-content:space-between;align-items:center;width:100%;border:1px solid #E4DFCE;background:#FBF8F0;border-radius:12px;padding:12px 14px;margin-bottom:8px;font:inherit;color:#2F4F46;cursor:pointer;min-height:48px}.q47day span{color:#6B7A72;font-size:13px}
 @media(max-width:899px){.q46wrap .q46map{height:min(46vh,420px);min-height:300px}}
 @media(min-width:900px){.q46wrap{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px;align-items:start}.q46wrap .q46map{height:calc(100vh - 230px);max-height:none}.q47{margin-top:0;max-height:calc(100vh - 230px);overflow:auto;padding-right:2px}.q46wrap>.q46card{position:absolute;left:auto;right:0;top:0;bottom:auto;width:380px;max-height:min(calc(100vh - 230px),640px);height:auto;z-index:40}}

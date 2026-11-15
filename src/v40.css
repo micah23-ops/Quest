@@ -23,6 +23,7 @@ textarea.q40-in{resize:vertical}
 .q40-chip{border:1.5px solid #c8d2c4;background:#fff;color:#2F4F46;border-radius:999px;padding:7px 14px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;min-height:36px}
 .q40-chip.on{background:#2F4F46;border-color:#2F4F46;color:#F7F3E9}
 .q40-err{color:#a4452c;font-size:13px;min-height:18px;margin-top:6px}
+.q40-more{display:block;width:100%;text-align:left;border:0;background:none;color:#6b8d7e;font:inherit;font-size:13.5px;font-weight:600;padding:12px 2px 2px;margin:4px 0 0;cursor:pointer;min-height:36px}
 .q40-foot{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .q40-pri,.q40-sec{border-radius:14px;font:inherit;font-weight:800;font-size:15px;padding:0 16px;min-height:46px;cursor:pointer}
 .q40-pri{border:0;background:#2F4F46;color:#F7F3E9;flex:1}.q40-sec{border:1.5px solid #c8d2c4;background:#fff;color:#2F4F46}.q40-sec.warn{color:#a4452c;border-color:#e3c7bd}

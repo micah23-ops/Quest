@@ -53,7 +53,14 @@ const _r=window.render;
 if(typeof _r==='function')window.render=function(){const v=_r.apply(this,arguments);try{document.querySelectorAll('.q47pick').forEach(x=>x.remove());igFor(D_());sync();deco()}catch(e){console.error(e)}return v};
 
 /* ---------- v49: ideas distances + pin icon + legend, Plan my days on the Map ---------- */
-const PI=Math.PI;let NEAR=null,NEARON=false;
+const PI=Math.PI;let NEAR=null,NEARON=false,NEARWATCHING=false;
+/* used to need a manual "Near me" tap, and even then only took one snapshot of where you were —
+   so if you walked somewhere else, "from me" quietly went stale. Watches your position instead
+   of reading it once, so it keeps updating as you move, the same way a map app would. Starts
+   quietly the first time Ideas has something to show it on; if it's denied there's just no
+   "from me" line, same as before, nothing else on the page is affected. */
+function tryNear(){if(NEARWATCHING||!navigator.geolocation)return;NEARWATCHING=true;
+ navigator.geolocation.watchPosition(p=>{NEAR={lat:p.coords.latitude,lng:p.coords.longitude};NEARON=true;deco()},()=>{},{enableHighAccuracy:false,timeout:15000,maximumAge:60000})}
 const hv=(a,b)=>{const R=6371e3,t=x=>x*PI/180,dl=t(b.lat-a.lat),dg=t(b.lng-a.lng),h=Math.sin(dl/2)**2+Math.cos(t(a.lat))*Math.cos(t(b.lat))*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
 const okp=x=>x&&x.lat!=null&&x.lng!=null&&x.lat!==''&&x.lng!==''&&isFinite(x.lat)&&isFinite(x.lng);
 const kmf=d=>d<950?Math.max(50,Math.round(d/50)*50)+' m':(d/1000).toFixed(1)+' km';
@@ -63,21 +70,25 @@ function deco(){
  const L=D_();if(!L)return;
  document.querySelectorAll('.q43pin').forEach(x=>{if(x.textContent!=='📍'){x.textContent='📍';x.title='On the map. Tap to see it or change the place.';x.setAttribute('aria-label','On the map')}x.removeAttribute('href');x.removeAttribute('target')});
  if(U.tab!=='shortlist')return;
+ if(document.querySelector('.sl-row'))tryNear();
  const hs=hotels();
  document.querySelectorAll('.sl-row').forEach(r=>{const c=r.querySelector('.check-done');const id=c&&c.dataset.id;const it=id&&(L.shortlist||[]).find(x=>x.id===id);if(!it)return;
   const tg=r.querySelector('.sl-tags'),body=r.querySelector('.sl-body');
   if(tg){const ln=tg.querySelector('.q44ln');if(ln){ln.dataset.q49=okp(it)?'show':'link';ln.dataset.id=id;ln.style.cursor='pointer'}}
   {const nt=r.querySelector('.sl-note');if(nt){nt.dataset.q49=okp(it)?'show':'link';nt.dataset.id=id;nt.style.cursor='pointer'}}
   if(tg&&okp(it)){const q=tg.querySelector('.q43pin');if(q)q.dataset.q49='show',q.dataset.id=id}
-  let d=r.querySelector('.q49d');const parts=[];
-  if(okp(it)){if(NEARON&&NEAR)parts.push(kmf(hv(NEAR,it))+' from you');if(hs.length){const m=Math.min.apply(null,hs.map(h=>hv(h,it)));parts.push(kmf(m)+' from hotel')}}
-  const txt=parts.join(' | ');
-  if(!txt){if(d)d.remove();return}
-  if(!d&&body){d=document.createElement('div');d.className='q49d';body.appendChild(d)}if(d&&d.textContent!==txt)d.textContent=txt});
+  /* "from me" stays visible on the collapsed row — it's the one people actually scan a list by
+     ("what's close to me right now?"). "from hotel" is a slower, planning-time question, so it
+     only shows once you open the card, same as the address note and other detail already do. */
+  let d=r.querySelector('.q49d'),dh=r.querySelector('.q49dh');
+  const meTxt=(okp(it)&&NEARON&&NEAR)?kmf(hv(NEAR,it))+' from me':'';
+  const hotelTxt=(okp(it)&&hs.length)?kmf(Math.min.apply(null,hs.map(h=>hv(h,it))))+' from hotel':'';
+  if(!meTxt){if(d)d.remove()}else{if(!d&&body){d=document.createElement('div');d.className='q49d';body.appendChild(d)}if(d&&d.textContent!==meTxt)d.textContent=meTxt}
+  if(!hotelTxt){if(dh)dh.remove()}else{if(!dh&&body){dh=document.createElement('div');dh.className='q49d q49dh';body.appendChild(dh)}if(dh&&dh.textContent!==hotelTxt)dh.textContent=hotelTxt}});
  const list=document.querySelector('.short-list');
  let leg=document.querySelector('.q49leg');let off=false;try{off=localStorage.getItem('q49leg')==='0'}catch(e){}
  if(list&&!off&&document.querySelector('.sl-row')){if(!leg){leg=document.createElement('div');leg.className='q49leg';list.insertBefore(leg,list.firstChild)}
-  const h='<span>📍 on the map · tap an address to see it</span><button type="button" data-q49="near" class="'+(NEARON?'on':'')+'">'+(NEARON?'Near me: on':'Near me')+'</button><button type="button" class="lx" data-q49="legx" aria-label="Hide">✕</button>';
+  const h='<span>📍 on the map · tap an address to see it</span><button type="button" class="lx" data-q49="legx" aria-label="Hide">✕</button>';
   if(leg.dataset.h!==h){leg.innerHTML=h;leg.dataset.h=h}}
  else if(leg&&off)leg.remove()}
 function goMap(id,link){const Q=window.__q46;if(!Q)return;const M=Q.M;M.rt=false;M.pf=null;M.ideas=true;M.fit=true;M.sel=link?null:'idea:'+id;U.tab='map';render();
@@ -162,7 +173,11 @@ function moveToIdeas(key){const[k,id]=String(key).split(':');if(k!=='plan')retur
  try{toastUndo('Moved to Ideas',()=>{mut(()=>{D().plans=sn.plans;D().shortlist=sn.shortlist})})}catch(e){}}
 function backChip(){const Q=window.__q46;if(!Q)return;const M=Q.M;if(!M.rt){M.fromIdeas=false}const has=document.querySelector('[data-q49=toideas]');const anchor=document.querySelector('.q46b[data-q46=rtclear]');const want=M.rt&&M.fromIdeas&&anchor;if(want&&!has){const b=document.createElement('button');b.type='button';b.className='q46b alt';b.dataset.q49='toideas';b.textContent='← Ideas';anchor.parentNode.insertBefore(b,anchor)}else if(has&&!want)has.remove()}
 let raf=0;new MutationObserver(()=>{if(raf)return;raf=requestAnimationFrame(()=>{raf=0;try{mapUi();backChip();gmRoute()}catch(e){}})}).observe(document.body,{childList:true,subtree:true});
-document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-q49]');if(!b)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const a=b.dataset.q49;
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-q49]');if(!b){
+  if(e.target.id==='q49p'){closePP();return}
+  if(e.target.id==='q49m'){closePlan();return}
+  return}
+ e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const a=b.dataset.q49;
  if(a==='near'){if(NEARON){NEARON=false;deco();return}if(!navigator.geolocation){try{toast('Your phone did not share location')}catch(x){}return}
   navigator.geolocation.getCurrentPosition(p=>{NEAR={lat:p.coords.latitude,lng:p.coords.longitude};NEARON=true;deco()},()=>{try{toast('Allow location to see how far things are from you')}catch(x){}},{enableHighAccuracy:false,timeout:10000,maximumAge:120000});return}
  if(a==='legx'){try{localStorage.setItem('q49leg','0')}catch(x){}const l=document.querySelector('.q49leg');if(l)l.remove();return}

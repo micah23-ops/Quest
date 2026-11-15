@@ -34,7 +34,7 @@ else{mut(()=>{d.plans.push(plan)});U.date=date;toast('Added to itinerary · '+di
 /* planning option: move buttons always there, small and quiet; booking etc under the menu */
 function optRow(o){const ed=U.edit&&U.edit.kind==='opt'&&U.edit.id===o.id,u=o.link&&url(o.link),votes=o.votes||{},mine=votes[A.me]||'',armed=U.armed===o.id;
 const nm=u?lnk(u,o.name):esc(o.name),allYes=A.people.length>1&&A.people.every(p=>votes[p.id]==='yes'),booked=o.status==='Booked';
-const meta=[o.area&&'⌖ '+o.area,o.price&&'₩'+o.price].filter(Boolean).join(' · ');
+const meta=[o.area&&'📍 '+o.area,o.price&&'₩'+o.price].filter(Boolean).join(' · ');
 const items=mItem('set-option-status',booked?'Unmark booked':'Mark as booked',`data-id="${o.id}" data-value="${booked?'Considering':'Booked'}"`)+mItem('edit','Edit',`data-kind="opt" data-id="${o.id}"`)+mItem('del-opt','Archive',`data-id="${o.id}"`,'danger');
 return `<div class="option-wrap opt3"><div class="o3-main"><div class="o3-title">${nm}${allYes?'<span class="two-yes">✓ all yes</span>':''}${booked?'<span class="badge">Booked</span>':''}</div>${meta?`<div class="o3-meta">${esc(meta)}</div>`:''}${o.notes?`<div class="o3-meta">${esc(o.notes)}</div>`:''}<div class="o3-acts"><button type="button" class="mv ${armed?'armed':''}" data-act="${armed?'to-short':'ask-short'}" data-id="${o.id}">${armed?'Tap again to move':'→ Shortlist'}</button><button type="button" class="mv" data-act="sched" data-kind="opt" data-id="${o.id}">→ Itinerary</button></div></div><div class="o3-side"><div class="pvs">${A.people.map(p=>pv(p,votes[p.id])).join('')}</div><div class="vote" aria-label="Your vote">${[['yes','✓'],['maybe','?'],['no','×']].map(([val,l])=>`<button type="button" title="${val}" class="${mine===val?'on-'+val:''}" data-act="vote" data-id="${o.id}" data-value="${val}">${l}</button>`).join('')}</div></div>${menuBtn('opt',o.id,items)}${isSched(o)?schedForm('opt',o):''}${ed?`<div class="ef full">${fld(o.id,'name','Name',o.name)}${fld(o.id,'link','Link',o.link,{type:'url',ph:'https://'})}<div class="two">${fld(o.id,'area','Area',o.area)}${fld(o.id,'price','Price per person',o.price)}</div>${fld(o.id,'notes','Notes',o.notes,{area:1})}${editBar('opt',o.id)}</div>`:''}</div>`}
 
@@ -42,7 +42,11 @@ return `<div class="option-wrap opt3"><div class="o3-main"><div class="o3-title"
 {const _sr=window.shortRow;window.shortRow=i=>{let h=_sr(i);
 const star=`<button type="button" class="star ${i.favorite?'on':''}" data-act="fav" data-id="${i.id}" aria-pressed="${!!i.favorite}" title="${i.favorite?'Unpin':'Pin to the top'}" aria-label="Favourite">${i.favorite?'★':'☆'}</button>`;
 h=h.replace('<div class="person-pick">',star+'<div class="person-pick">');
-h=h.replace(/<div class="sl-meta">.*?<\/div>/,`<div class="sl-tags">${i.category?`<span class="tag">${esc(i.category)}</span>`:''}${i.area?`<span class="tag area">⌖ ${esc(i.area)}</span>`:''}</div>`);
+/* no icon here: the "·" separator between tags already comes from CSS (.tag+.tag:before),
+   and v44's own location pin already sits right after this row, so a second pin here just
+   duplicated it (that doubled-up glyph is what showed up as stray "b7"-looking text on some
+   fonts) */
+h=h.replace(/<div class="sl-meta">.*?<\/div>/,`<div class="sl-tags">${i.category?`<span class="tag">${esc(i.category)}</span>`:''}${i.area?`<span class="tag area">${esc(i.area)}</span>`:''}</div>`);
 return h.replace(/(role="menuitem" class="danger" data-act="del-short"[^>]*>)Delete</,'$1Archive<')}}
 {const _sl=window.shortlist;window.shortlist=()=>{return _sl()+archiveHtml()}}
 {const _pl=window.planning;window.planning=()=>_pl().replace(/Grey circle[^<]*/,'Grey circle = hasn’t voted yet. → Shortlist and → Itinerary move an idea on, no need to wait for everyone. Moved or removed ideas wait in the Archive.')+archiveHtml()}

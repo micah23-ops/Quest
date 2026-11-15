@@ -1,7 +1,13 @@
 /* v15 */
-.mlogo{height:30px;width:auto}
-.q-word{display:block;height:34px;width:auto}
-.q-word.big{height:64px;margin:0 auto}
+.q-wm{display:block;width:auto}
+.mlogo.q-wm{height:28px}
+.q-word.q-wm{height:32px;margin:0 auto}
+.q-word.big.q-wm{height:58px}
+/* the Essentials/Settle nav icons are raw <svg> with no intrinsic size, so on the desktop
+   pill nav (which never wraps icons in .nav-icon) they rendered at the UA default size
+   and blew the button up into a big icon-over-label box instead of a plain pill */
+.main-nav button{display:inline-flex;align-items:center;gap:7px}
+.main-nav button svg{width:16px;height:16px;flex:none;display:block}
 .page-hills{position:fixed;left:0;right:0;bottom:0;width:100%;height:130px;z-index:0;pointer-events:none}
 .shell{position:relative}
 .auth-page,.trips-wrap{z-index:1}
@@ -42,7 +48,7 @@
 .tag{border-radius:99px;padding:2px 9px;font-size:11.5px;font-weight:700}
 .tag.c-food{background:#fbefbd;color:#7a5a00}.tag.c-exp{background:#fbe3ea;color:#8a2b4a}.tag.c-act{background:#e1efdc;color:#2f5a3a}
 .idea-edit .ef-actions{display:flex;gap:8px;flex-wrap:wrap}
-@media(min-width:800px){.q-word.big{height:78px}.idea-name{font-size:16px}}
+@media(min-width:800px){.q-word.big.q-wm{height:70px}.idea-name{font-size:16px}}
 .trip-list{margin-top:10px}.shell>.masthead .q-word{margin-bottom:8px}
 /* time-aligned rows */
 .tl{display:grid;gap:6px;align-items:stretch;position:relative}
