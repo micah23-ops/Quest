@@ -17,13 +17,21 @@ function getBudget(){try{const o=JSON.parse((D().details||{}).budget||'null');re
    to the budget's currency at a live rate when it was logged in a different one. This is
    deliberately NOT scoped to the current person — a 330,000 dinner one person paid for
    the whole group is 330,000 of group spend, even though that payer is only "out" their
-   own share (everyone else owes the rest back). See mySpendMinor() below for that other,
-   per-person number, which the panel shows alongside this one so the two can't be confused. */
+   own share (everyone else owes the rest back). paidMinor() below is the cash-out-of-your-
+   pocket version of that same idea; the panel shows it as a smaller line under this one
+   whenever it would actually differ (i.e. someone else has paid for something too). */
 function convRow(amountMinor,from,to){if(from===to)return amountMinor;const Q=window.__qst;if(!Q||!Q.fxConvertMinor)return null;return Q.fxConvertMinor(amountMinor,from,to)}
 function spentMinor(cur){const Q=window.__qst;if(!Q)return 0;let t=0;
  Q.ST.rows.filter(r=>r.kind==='expense').forEach(r=>{const c=convRow(r.amount_minor,r.currency,cur);if(c!=null)t+=c});return t}
+/* What you've personally paid out of pocket: the full amount of every expense you were the
+   payer on, whoever it was actually for or however the shares are split — fronting Ethan's
+   ₩376,800 accommodation counts in full here, even though it's 0 of your "share" (he owes
+   it all back). This is cash that's left your account, not what the trip costs you. */
+function paidMinor(cur){const Q=window.__qst;if(!Q||!A.me)return 0;let t=0;
+ Q.ST.rows.filter(r=>r.kind==='expense'&&r.payer_id===A.me).forEach(r=>{const c=convRow(r.amount_minor,r.currency,cur);if(c!=null)t+=c});return t}
 /* My actual share of the group spend: sum of my slice of every expense (not what I fronted,
-   not my net balance) — i.e. what this trip actually costs me once everyone settles up. */
+   not my net balance) — i.e. what this trip actually costs me once everyone settles up.
+   Not currently shown anywhere; kept for whatever next needs it. */
 function mySpendMinor(cur){const Q=window.__qst;if(!Q||!A.me)return 0;
  return Q.ST.rows.filter(r=>r.kind==='expense').reduce((a,r)=>{const sh=r.shares||{};
   let mine;if(Object.prototype.hasOwnProperty.call(sh,A.me))mine=sh[A.me];
@@ -50,10 +58,14 @@ function panelHtml(){
  const spent=spentMinor(b.cur),pct=b.amt>0?spent/b.amt:0;
  const cls=pct>=1?'over':pct>=0.8?'near':'fine';
  const note=pendingOtherCur(b.cur)?`<small class="qbud-note">Fetching rates to convert other-currency expenses…</small>`:'';
+ /* only worth a line when it would actually tell you something: if you're the only payer
+    on the trip so far, "you've paid X of that" would just repeat the number above it */
+ const paid=paidMinor(b.cur);
+ const paidNote=(paid>0&&paid!==spent)?`<small class="qbud-paid">You’ve personally paid ${money(paid,b.cur)} of that</small>`:'';
  /* set: one line folded right into the balance card — "Budget X of Y spent", then the bar.
     No separate card, no extra stats; tap the line to edit. */
  return `<div class="qbud-line ${cls}" data-qbud="open" role="button" tabindex="0"><b>Budget</b> ${money(spent,b.cur)} of ${money(b.amt,b.cur)} spent
- <div class="qbud-bar"><div class="qbud-fill" style="width:${Math.min(100,Math.round(pct*100))}%"></div></div>${note}</div>`;
+ <div class="qbud-bar"><div class="qbud-fill" style="width:${Math.min(100,Math.round(pct*100))}%"></div></div>${note}${paidNote}</div>`;
 }
 {const _b=window.bill;if(typeof _b==='function')window.bill=function(){const h=_b.apply(this,arguments);if(typeof h!=='string'||U.tab!=='bill')return h;
  /* folds into the first panel (Balances), right above its closing tag, instead of its own
