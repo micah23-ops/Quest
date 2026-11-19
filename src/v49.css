@@ -12,6 +12,7 @@
 .qbud-line.near .qbud-fill{background:#C9922B}
 .qbud-line.over .qbud-fill{background:#C8553D}
 .qbud-note{display:block;color:#6B7A72;font-size:11.5px;margin-top:5px}
+.qbud-paid{display:block;color:#4a5a52;font-size:11.5px;margin-top:5px;font-weight:600}
 /* edit form: plain, no card chrome of its own — it already sits inside the Balances card */
 .qbud-edit{margin-top:14px;padding-top:12px;border-top:1px solid #EEF0EB}
 .qbud-row{display:flex;gap:8px;margin:0 0 6px}
