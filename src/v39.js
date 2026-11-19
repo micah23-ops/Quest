@@ -17,7 +17,7 @@ const nm=id=>{const p=people().find(x=>x.id===id);return p?p.name:'Someone'};
 const who=id=>id===me()?'You':nm(id);
 const letter=i=>i<26?String.fromCharCode(65+i):String(i+1);
 const dateStr=t=>{try{return new Date(t).toLocaleDateString('en-US',{month:'short',day:'numeric'})}catch(e){return ''}};
-const ST={rows:[],methods:[],ch:null,chTrip:null,trip:null,rates:{}};
+const ST={rows:[],methods:[],ch:null,chTrip:null,trip:null,rates:{},fxAll:{}};
 let X=null,SH=null;/* X: add/edit expense sheet state, SH: other sheets */
 
 /* ---------- trip currency settings (stored in trip details.settle) ---------- */
@@ -29,9 +29,28 @@ function rateInfo(){const c=cfg();if(c.rate)return{r:c.rate,manual:true,a:c.a,b:
  if(v===undefined){ST.rates[k]=null;(async()=>{try{const l=JSON.parse(localStorage.getItem('qstr_'+k)||'null');if(l&&Date.now()-l.t<6*36e5){ST.rates[k]=l;liveUi();return}}catch(e){}
   try{const r=await fetch('https://api.frankfurter.dev/v1/latest?base='+c.a+'&symbols='+c.b);const j=await r.json();if(j&&j.rates&&j.rates[c.b]){const o={r:j.rates[c.b],date:j.date,t:Date.now()};ST.rates[k]=o;try{localStorage.setItem('qstr_'+k,JSON.stringify(o))}catch(e){}liveUi()}}catch(e){}})()}
  return null}
-function conv(minor,cur){const c=cfg();if(!minor||(cur!==c.a&&cur!==c.b))return'';const ri=rateInfo();if(!ri)return'';
- const to=cur===c.a?c.b:c.a,major=minor/F(cur),out=cur===c.a?major*ri.r:major/ri.r,om=Math.round(out*F(to));
- return'≈ '+money(om,to)+' · 1 '+c.a+' = '+(+ri.r.toPrecision(5))+' '+c.b+' · '+(ri.manual?'manual rate':dateStr(ri.date))}
+/* full rate table for one base currency, fetched once and cached 6h; lets the little
+   conversion line work for ANY currency picked, not just the two set in Currency settings */
+function fxTable(base){const v=ST.fxAll[base];if(v)return v;
+ if(v===undefined){ST.fxAll[base]=null;(async()=>{
+  try{const l=JSON.parse(localStorage.getItem('qstfxall_'+base)||'null');if(l&&Date.now()-l.t<6*36e5){ST.fxAll[base]=l;liveUi();return}}catch(e){}
+  try{const r=await fetch('https://api.frankfurter.dev/v1/latest?base='+encodeURIComponent(base));const j=await r.json();
+   if(j&&j.rates){const o={rates:j.rates,date:j.date,t:Date.now()};ST.fxAll[base]=o;try{localStorage.setItem('qstfxall_'+base,JSON.stringify(o))}catch(e){}liveUi();try{if(typeof render==='function')render()}catch(e){}}}catch(e){}})()}
+ return null}
+function fxConvertMinor(amountMinor,from,to){if(from===to)return amountMinor;const t=fxTable(from);if(!t)return null;const r=t.rates[to];if(!r)return null;
+ return Math.round((amountMinor/F(from))*r*F(to))}
+function conv(minor,cur){if(!minor)return'';const c=cfg();
+ const pair=(cur===c.a||cur===c.b)&&(c.cur===c.a||c.cur===c.b)&&c.a!==c.b;
+ if(pair&&cur!==c.cur){/* the pair configured in Currency settings keeps its manual-rate override */
+  const ri=rateInfo();if(ri){const to=cur===c.a?c.b:c.a,major=minor/F(cur),out=cur===c.a?major*ri.r:major/ri.r,om=Math.round(out*F(to));
+   return'≈ '+money(om,to)+' · 1 '+c.a+' = '+(+ri.r.toPrecision(5))+' '+c.b+' · '+(ri.manual?'manual rate':dateStr(ri.date))}}
+ if(cur===c.cur){if(!(cur===c.a||cur===c.b)||c.a===c.b)return'';
+  const ri=rateInfo();if(!ri)return'';const to=cur===c.a?c.b:c.a,major=minor/F(cur),out=cur===c.a?major*ri.r:major/ri.r,om=Math.round(out*F(to));
+  return'≈ '+money(om,to)+' · 1 '+c.a+' = '+(+ri.r.toPrecision(5))+' '+c.b+' · '+(ri.manual?'manual rate':dateStr(ri.date))}
+ /* any other currency: convert to the trip's own default at a live rate, fetched on demand */
+ const om=fxConvertMinor(minor,cur,c.cur);if(om==null)return'';
+ const t=fxTable(cur),rate=t&&t.rates[c.cur];
+ return'≈ '+money(om,c.cur)+(rate?' · 1 '+cur+' = '+(+rate.toPrecision(5))+' '+c.cur+' · '+dateStr(t.date):'')}
 function liveUi(){if(X)['main'].concat((X.staged||[]).map((_,i)=>String(i))).forEach(upd)}
 
 /* ---------- data ---------- */
@@ -188,7 +207,9 @@ function activate(s,id){if(s.active===id)return false;if(s.active)s.col[s.active
 function openAdd(o){X={main:fresh(o),staged:[],open:null,err:'',edit:null,confirm:false,saving:false};SH=null;paintX();setTimeout(()=>{const e=document.querySelector('#qst .qst-title');if(e)e.focus()},60)}
 function openEdit(id){const r=ST.rows.find(x=>x.id===id);if(!r)return;if(r.kind==='payment'){openPay(r.payer_id,r.payee_id,r.amount_minor,r.currency,r);return}
  X={main:fromRow(r),staged:[],open:null,err:'',edit:id,confirm:false,saving:false};SH=null;paintX()}
-function tryClose(){if(!X&&!SH){closeAll();return}if(X&&!X.edit&&(X.staged.length||hasInput(X.main))){X.confirm=true;paintX();return}if(X&&X.edit&&X.dirty){X.confirm=true;paintX();return}closeAll()}
+function showWarn(){try{document.activeElement&&document.activeElement.blur&&document.activeElement.blur()}catch(e){}
+ setTimeout(()=>{const w=document.querySelector('#qst .qst-warn');if(w)w.scrollIntoView({block:'center',behavior:'smooth'})},60)}
+function tryClose(){if(!X&&!SH){closeAll();return}if(X&&!X.edit&&(X.staged.length||hasInput(X.main))){X.confirm=true;paintX();showWarn();return}if(X&&X.edit&&X.dirty){X.confirm=true;paintX();showWarn();return}closeAll()}
 function another(){const m=X.main;norm(m);if(!hasInput(m)){X.err='Add a description and amount first';paintX();return}const c=calc(m);if(!c.ok){X.err=c.err;paintX();return}
  X.staged.push(JSON.parse(JSON.stringify(m)));X.err='';
  const n=fresh({cur:m.cur,payer:m.payer,who:m.who.slice(),mode:m.mode});if(n.mode==='itemize')seed(n);X.main=n;paintX();setTimeout(()=>{const e=document.querySelector('#qst .qst-title');if(e)e.focus()},40)}
@@ -323,5 +344,5 @@ document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest
 window.questLogExpense=function(p){if(!people().length)return;const ex=p.logged&&ST.rows.find(r=>r.id===p.logged);if(ex){openEdit(ex.id);return}
  const cur=(p.cost_cur&&CURS[p.cost_cur])?p.cost_cur:cfg().cur,amt=p.cost_minor>0?toStr(p.cost_minor,cur):'';
  openAdd({cur,planId:p.id,text:p.name+(amt?' '+amt:''),title:p.name,amount:amt,who:(p.who&&p.who.length&&p.who.length<people().length)?p.who.slice():allIds(),all:!(p.who&&p.who.length&&p.who.length<people().length)})};
-window.__qst={ST,cfg,calc,allocate,toMinor,money,nets,matches,get X(){return X},get SH(){return SH}};
+window.__qst={ST,cfg,calc,allocate,toMinor,money,nets,matches,fxConvertMinor,get X(){return X},get SH(){return SH}};
 })();
