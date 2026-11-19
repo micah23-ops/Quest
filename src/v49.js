@@ -13,20 +13,27 @@ function toMinor(s,c){s=String(s==null?'':s).replace(/[,\s]/g,'');if(!/^\d*\.?\d
 const toStr=(m,c)=>dec(c)?(m/100).toFixed(2).replace(/\.00$/,''):String(m);
 function cfgCur(){try{return window.__qst?window.__qst.cfg().cur:'PHP'}catch(e){return 'PHP'}}
 function getBudget(){try{const o=JSON.parse((D().details||{}).budget||'null');return o&&CURS[o.cur]&&o.amt>0?o:null}catch(e){return null}}
-/* Group total: every expense counted once at its full amount, whoever paid it. This is
+/* Group total: every expense counted once at its full amount, whoever paid it, converted
+   to the budget's currency at a live rate when it was logged in a different one. This is
    deliberately NOT scoped to the current person — a 330,000 dinner one person paid for
    the whole group is 330,000 of group spend, even though that payer is only "out" their
    own share (everyone else owes the rest back). See mySpendMinor() below for that other,
    per-person number, which the panel shows alongside this one so the two can't be confused. */
-function spentMinor(cur){const Q=window.__qst;if(!Q)return 0;return Q.ST.rows.filter(r=>r.kind==='expense'&&r.currency===cur).reduce((a,r)=>a+r.amount_minor,0)}
+function convRow(amountMinor,from,to){if(from===to)return amountMinor;const Q=window.__qst;if(!Q||!Q.fxConvertMinor)return null;return Q.fxConvertMinor(amountMinor,from,to)}
+function spentMinor(cur){const Q=window.__qst;if(!Q)return 0;let t=0;
+ Q.ST.rows.filter(r=>r.kind==='expense').forEach(r=>{const c=convRow(r.amount_minor,r.currency,cur);if(c!=null)t+=c});return t}
 /* My actual share of the group spend: sum of my slice of every expense (not what I fronted,
    not my net balance) — i.e. what this trip actually costs me once everyone settles up. */
 function mySpendMinor(cur){const Q=window.__qst;if(!Q||!A.me)return 0;
- return Q.ST.rows.filter(r=>r.kind==='expense'&&r.currency===cur).reduce((a,r)=>{const sh=r.shares||{};
-  if(Object.prototype.hasOwnProperty.call(sh,A.me))return a+sh[A.me];
+ return Q.ST.rows.filter(r=>r.kind==='expense').reduce((a,r)=>{const sh=r.shares||{};
+  let mine;if(Object.prototype.hasOwnProperty.call(sh,A.me))mine=sh[A.me];
   /* no explicit shares recorded (older row) and nobody else listed either: treat as all-mine */
-  return Object.keys(sh).length?a:a+r.amount_minor},0)}
-function otherCurSpent(cur){const Q=window.__qst;if(!Q)return false;return Q.ST.rows.some(r=>r.kind==='expense'&&r.currency!==cur)}
+  else mine=Object.keys(sh).length?0:r.amount_minor;
+  if(!mine)return a;const c=convRow(mine,r.currency,cur);return c!=null?a+c:a},0)}
+/* true while some expense is in another currency and its live rate hasn't loaded yet —
+   the total above is an undercount until then, so the panel can say so instead of looking final */
+function pendingOtherCur(cur){const Q=window.__qst;if(!Q)return false;
+ return Q.ST.rows.some(r=>r.kind==='expense'&&r.currency!==cur&&convRow(r.amount_minor,r.currency,cur)==null)}
 
 let E=null; /* {amt,cur,err} while the small set/edit form is open */
 function panelHtml(){
@@ -42,7 +49,7 @@ function panelHtml(){
  if(!b)return `<button type="button" class="qbud-mini" data-qbud="open">＋ Set a trip budget</button>`;
  const spent=spentMinor(b.cur),pct=b.amt>0?spent/b.amt:0;
  const cls=pct>=1?'over':pct>=0.8?'near':'fine';
- const note=otherCurSpent(b.cur)?`<small class="qbud-note">Only ${esc(b.cur)} expenses are counted.</small>`:'';
+ const note=pendingOtherCur(b.cur)?`<small class="qbud-note">Fetching rates to convert other-currency expenses…</small>`:'';
  /* set: one line folded right into the balance card — "Budget X of Y spent", then the bar.
     No separate card, no extra stats; tap the line to edit. */
  return `<div class="qbud-line ${cls}" data-qbud="open" role="button" tabindex="0"><b>Budget</b> ${money(spent,b.cur)} of ${money(b.amt,b.cur)} spent
